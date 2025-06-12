@@ -69,12 +69,18 @@
     const preguntaInput = document.getElementById('pregunta');
     const conversacion = document.getElementById('conversacion');
 
+    // Mantener ID de sesión único por usuario
+    if (!localStorage.getItem('chat_session_id')) {
+      localStorage.setItem('chat_session_id', 'cliente_' + Math.floor(Math.random() * 1000000));
+    }
+    const sessionId = localStorage.getItem('chat_session_id');
+
     formulario.addEventListener('submit', async (e) => {
       e.preventDefault();
       const mensaje = preguntaInput.value.trim();
       if (!mensaje) return;
 
-      // Mostrar pregunta del usuario
+      // Mostrar mensaje del usuario
       const divPregunta = document.createElement('div');
       divPregunta.className = 'mensaje usuario';
       divPregunta.textContent = mensaje;
@@ -87,20 +93,34 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ mensaje })
+          body: JSON.stringify({ question: mensaje, sessionId })
         });
 
-        const datos = await respuesta.json();
+        const datos = await res.json();
+
+        let respuestaTexto = 'No se recibió respuesta del asistente.';
+        if (Array.isArray(datos) && datos[0]?.RespuestaFinal) {
+          respuestaTexto = datos[0].RespuestaFinal;
+        } else if (datos.RespuestaFinal) {
+          respuestaTexto = datos.RespuestaFinal;
+        }
+
+        // Reemplazar saltos de línea y convertir enlaces
+        const respuestaHtml = respuestaTexto
+          .replace(/\n/g, "<br>")
+          .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
 
         const divRespuesta = document.createElement('div');
         divRespuesta.className = 'mensaje respuesta';
-        divRespuesta.textContent = datos.respuesta || 'No se recibió respuesta del asistente.';
+        divRespuesta.innerHTML = respuestaHtml;
         conversacion.appendChild(divRespuesta);
+
       } catch (error) {
         const divError = document.createElement('div');
         divError.className = 'mensaje respuesta';
-        divError.textContent = 'Error de conexión con el servidor.';
+        divError.textContent = '❌ Error de conexión con el servidor.';
         conversacion.appendChild(divError);
+        console.error(error);
       }
 
       conversacion.scrollTop = conversacion.scrollHeight;
