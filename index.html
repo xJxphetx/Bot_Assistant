@@ -1,130 +1,223 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Chat con AG Electrónica</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      padding: 2rem;
-    }
-    .chat-box {
-      background: #fff;
-      border-radius: 8px;
-      padding: 1rem;
-      max-width: 600px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .mensaje {
-      margin-bottom: 1rem;
-      padding: 0.5rem;
-      border-radius: 5px;
-    }
-    .usuario {
-      background-color: #d0e7ff;
-      text-align: right;
-    }
-    .respuesta {
-      background-color: #eee;
-      white-space: pre-wrap;
-    }
-    form {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+      padding: 30px;
       display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
+      justify-content: center;
     }
-    input[type="text"] {
+
+    .container {
+      background: #fff;
+      border-radius: 10px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1a1a1a;
+    }
+
+    #chat {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+
+    .msg {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 15px;
+      max-width: 85%;
+      white-space: pre-line;
+      word-wrap: break-word;
+    }
+
+    .user {
+      background-color: #d8ecff;
+      align-self: flex-end;
+      text-align: right;
+      margin-left: auto;
+    }
+
+    .bot {
+      background-color: #e8e8e8;
+      align-self: flex-start;
+      color: #333;
+    }
+
+    #input-area {
+      display: flex;
+      gap: 10px;
+    }
+
+    #msg {
       flex: 1;
-      padding: 0.5rem;
-      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
       border: 1px solid #ccc;
+      border-radius: 8px;
     }
+
     button {
-      padding: 0.5rem 1rem;
+      padding: 10px 16px;
       background-color: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
+      font-weight: bold;
+      border-radius: 8px;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #0056b3;
+    }
+
+    /* Animación de escribiendo... */
+    .typing {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dot {
+      height: 8px;
+      width: 8px;
+      background-color: #777;
+      border-radius: 50%;
+      display: inline-block;
+      animation: blink 1.4s infinite both;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes blink {
+      0% { opacity: 0.2; transform: scale(1); }
+      20% { opacity: 1; transform: scale(1.3); }
+      100% { opacity: 0.2; transform: scale(1); }
+    }
+
+    a {
+      color: #0056b3;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="chat-box">
-    <div id="conversacion"></div>
-    <form id="formulario">
-      <input type="text" id="pregunta" placeholder="Escribe tu pregunta..." required />
-      <button type="submit">Enviar</button>
-    </form>
+  <div class="container">
+    <h2>Chat con AG Electrónica</h2>
+    <div id="chat"></div>
+
+    <div id="input-area">
+      <input type="text" id="msg" placeholder="Escribe tu pregunta..." />
+      <button onclick="enviar()">Enviar</button>
+    </div>
   </div>
 
   <script>
-    const formulario = document.getElementById('formulario');
-    const preguntaInput = document.getElementById('pregunta');
-    const conversacion = document.getElementById('conversacion');
-
-    // Mantener ID de sesión único por usuario
+    // Mantener sessionId
     if (!localStorage.getItem('chat_session_id')) {
       localStorage.setItem('chat_session_id', 'cliente_' + Math.floor(Math.random() * 1000000));
     }
+
     const sessionId = localStorage.getItem('chat_session_id');
+    const chat = document.getElementById('chat');
+    let typingEl = null;
 
-    formulario.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const mensaje = preguntaInput.value.trim();
-      if (!mensaje) return;
+    function agregarMensaje(texto, clase) {
+      const div = document.createElement('div');
+      div.className = `msg ${clase}`;
+      div.innerHTML = texto;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
 
-      // Mostrar mensaje del usuario
-      const divPregunta = document.createElement('div');
-      divPregunta.className = 'mensaje usuario';
-      divPregunta.textContent = mensaje;
-      conversacion.appendChild(divPregunta);
-      preguntaInput.value = '';
+    function agregarEscribiendo() {
+      typingEl = document.createElement('div');
+      typingEl.className = 'msg bot typing';
+      typingEl.innerHTML = `<span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
+      chat.appendChild(typingEl);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function quitarEscribiendo() {
+      if (typingEl) {
+        typingEl.remove();
+        typingEl = null;
+      }
+    }
+
+    function escapeHTML(text) {
+      return text.replace(/[&<>"']/g, function (match) {
+        const escapeMap = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        };
+        return escapeMap[match];
+      });
+    }
+
+    async function enviar() {
+      const input = document.getElementById('msg');
+      const pregunta = input.value.trim();
+      if (!pregunta) return;
+
+      agregarMensaje(escapeHTML(pregunta), 'user');
+      input.value = '';
+      agregarEscribiendo();
 
       try {
-        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook/ai_assistant', {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ question: mensaje })
+        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook-test/ai_assistant', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: pregunta, sessionId })
         });
 
-        const datos = await res.json();
+        quitarEscribiendo();
+        const raw = await res.text();
 
-        let respuestaTexto = 'No se recibió respuesta del asistente.';
-        if (Array.isArray(datos) && datos[0]?.RespuestaFinal) {
-          respuestaTexto = datos[0].RespuestaFinal;
-        } else if (datos.RespuestaFinal) {
-          respuestaTexto = datos.RespuestaFinal;
+        let respuestaTexto = raw;
+        try {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed[0]?.RespuestaFinal) {
+            respuestaTexto = parsed[0].RespuestaFinal;
+          } else if (parsed.RespuestaFinal) {
+            respuestaTexto = parsed.RespuestaFinal;
+          }
+        } catch (e) {
+          console.warn('Respuesta no es JSON válido');
         }
 
-        // Reemplazar saltos de línea y convertir enlaces
-        const respuestaHtml = respuestaTexto
+        const html = respuestaTexto
           .replace(/\n/g, "<br>")
           .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
 
-        const divRespuesta = document.createElement('div');
-        divRespuesta.className = 'mensaje respuesta';
-        divRespuesta.innerHTML = respuestaHtml;
-        conversacion.appendChild(divRespuesta);
+        agregarMensaje(html, 'bot');
 
-      } catch (error) {
-        const divError = document.createElement('div');
-        divError.className = 'mensaje respuesta';
-        divError.textContent = '❌ Error de conexión con el servidor.';
-        conversacion.appendChild(divError);
-        console.error(error);
+      } catch (err) {
+        quitarEscribiendo();
+        agregarMensaje('❌ Error al conectar con el servidor', 'bot');
+        console.error(err);
       }
-
-      conversacion.scrollTop = conversacion.scrollHeight;
-    });
+    }
   </script>
 </body>
 </html>
