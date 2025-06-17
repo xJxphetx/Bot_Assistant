@@ -1,71 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Chat con AG Electrónica</title>
+  <meta charset="UTF-8" />
+  <title>AG Electrónica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #f2f2f2;
-      padding: 30px;
+      background: linear-gradient(to bottom, #e6f0ff, #ffffff);
+      height: 100vh;
       display: flex;
       justify-content: center;
+      align-items: stretch;
     }
 
     .container {
-      background: #fff;
-      border-radius: 10px;
-      max-width: 700px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
       width: 100%;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      padding: 20px;
+      max-width: 700px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
     }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #1a1a1a;
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      background-color: #0056b3;
+      color: #fff;
+    }
+
+    .header img {
+      height: 36px;
+      margin-right: 12px;
+    }
+
+    .header h2 {
+      font-size: 20px;
+      margin: 0;
     }
 
     #chat {
-      max-height: 400px;
+      flex: 1;
       overflow-y: auto;
-      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      scroll-behavior: smooth;
     }
 
     .msg {
       margin: 10px 0;
-      padding: 10px 15px;
-      border-radius: 15px;
-      max-width: 85%;
-      white-space: pre-line;
+      padding: 12px 16px;
+      border-radius: 18px;
+      max-width: 75%;
       word-wrap: break-word;
+      line-height: 1.4;
+      font-size: 15px;
+      animation: fadeIn 0.3s ease-in;
     }
 
     .user {
-      background-color: #d8ecff;
+      background: #cce5ff;
       align-self: flex-end;
       text-align: right;
-      margin-left: auto;
+      border-top-right-radius: 0;
     }
 
     .bot {
-      background-color: #e8e8e8;
+      background: #eeeeee;
       align-self: flex-start;
       color: #333;
+      border-top-left-radius: 0;
     }
 
     #input-area {
       display: flex;
-      gap: 10px;
+      padding: 15px 20px;
+      border-top: 1px solid #ddd;
+      background-color: #f0f0f0;
     }
 
     #msg {
       flex: 1;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
+      padding: 10px 14px;
       border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      outline: none;
     }
 
     button {
@@ -76,35 +108,30 @@
       font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
       background-color: #0056b3;
     }
 
-    /* Animación de escribiendo... */
     .typing {
       display: flex;
       gap: 6px;
       align-items: center;
+      padding: 10px;
     }
 
     .dot {
       height: 8px;
       width: 8px;
-      background-color: #777;
+      background-color: #555;
       border-radius: 50%;
-      display: inline-block;
       animation: blink 1.4s infinite both;
     }
 
-    .dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-
-    .dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
 
     @keyframes blink {
       0% { opacity: 0.2; transform: scale(1); }
@@ -112,15 +139,42 @@
       100% { opacity: 0.2; transform: scale(1); }
     }
 
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     a {
-      color: #0056b3;
+      color: #007bff;
       text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .header h2 {
+        font-size: 16px;
+      }
+
+      .header img {
+        height: 30px;
+      }
+
+      button {
+        font-size: 14px;
+      }
+
+      #msg {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Chat con AG Electrónica</h2>
+    <div class="header">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9pJ85Zy6nLEQ8Xqs4KlR_vcKYNHUmEY1JUw&s" alt="Logo AG Electrónica" />
+      <h2>AG Electrónica</h2>
+    </div>
+
     <div id="chat"></div>
 
     <div id="input-area">
@@ -130,7 +184,6 @@
   </div>
 
   <script>
-    // Mantener sessionId
     if (!localStorage.getItem('chat_session_id')) {
       localStorage.setItem('chat_session_id', 'cliente_' + Math.floor(Math.random() * 1000000));
     }
@@ -185,7 +238,7 @@
       agregarEscribiendo();
 
       try {
-        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook/ai_assistant', {
+        const res = await fetch('http://localhost:5678/webhook-test/assistant-openia', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question: pregunta, sessionId })
@@ -218,6 +271,13 @@
         console.error(err);
       }
     }
+
+    document.getElementById('msg').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        enviar();
+      }
+    });
   </script>
 </body>
 </html>
