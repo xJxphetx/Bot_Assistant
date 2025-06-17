@@ -238,7 +238,7 @@
       agregarEscribiendo();
 
       try {
-        const res = await fetch('http://localhost:5678/webhook-test/assistant-openia', {
+        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook/ai_assistant', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question: pregunta, sessionId })
