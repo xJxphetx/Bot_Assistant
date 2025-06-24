@@ -1,314 +1,71 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>AG Electrónica</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>Asistente AG Electrónica</title>
   <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #e6f0ff, #ffffff);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-    }
-
-    .container {
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      width: 100%;
-      max-width: 700px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-    }
-
-    .header {
-      display: flex;
-      align-items: center;
-      padding: 15px 20px;
-      background-color: #0056b3;
-      color: #fff;
-    }
-
-    .header img {
-      height: 36px;
-      margin-right: 12px;
-    }
-
-    .header h2 {
-      font-size: 20px;
-      margin: 0;
-    }
-
-    #chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-      background-color: #f9f9f9;
-      display: flex;
-      flex-direction: column;
-      scroll-behavior: smooth;
-    }
-
-    .msg {
-      margin: 10px 0;
-      padding: 12px 16px;
-      border-radius: 18px;
-      max-width: 75%;
-      word-wrap: break-word;
-      line-height: 1.4;
-      font-size: 15px;
-      animation: fadeIn 0.3s ease-in;
-    }
-
-    .user {
-      background: #cce5ff;
-      align-self: flex-end;
-      text-align: right;
-      border-top-right-radius: 0;
-    }
-
-    .bot {
-      background: #eeeeee;
-      align-self: flex-start;
-      color: #333;
-      border-top-left-radius: 0;
-    }
-
-    #input-area {
-      display: flex;
-      padding: 15px 20px;
-      border-top: 1px solid #ddd;
-      background-color: #f0f0f0;
-    }
-
-    #msg {
-      flex: 1;
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+    body { font-family: Arial, sans-serif; }
+    .boton-opcion {
+      background-color: #4A90E2;
+      color: white;
+      padding: 12px 20px;
+      margin: 10px 5px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
       font-size: 16px;
-      outline: none;
-    }
-
-    button {
-      padding: 10px 16px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .typing {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      padding: 10px;
-    }
-
-    .dot {
-      height: 8px;
-      width: 8px;
-      background-color: #555;
-      border-radius: 50%;
-      animation: blink 1.4s infinite both;
-    }
-
-    .dot:nth-child(2) { animation-delay: 0.2s; }
-    .dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes blink {
-      0% { opacity: 0.2; transform: scale(1); }
-      20% { opacity: 1; transform: scale(1.3); }
-      100% { opacity: 0.2; transform: scale(1); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    a {
-      color: #007bff;
-      text-decoration: underline;
-    }
-
-    .opcion-btn {
-      display: block;
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 12px 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: #5296df;
-      color: white;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
-      text-align: left;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-
-    .opcion-btn:hover {
-      background-color: #0056b3;
-      transform: scale(1.02);
-    }
-
-    @media (max-width: 600px) {
-      .header h2 { font-size: 16px; }
-      .header img { height: 30px; }
-      button { font-size: 14px; }
-      #msg { font-size: 14px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9pJ85Zy6nLEQ8Xqs4KlR_vcKYNHUmEY1JUw&s" alt="Logo AG Electrónica" />
-      <h2>AG-ente Electrónica</h2>
-    </div>
 
-    <div id="chat"></div>
+  <h2>Hola 👋, soy tu asistente virtual de <strong>AG Electrónica</strong></h2>
+  <p>¿En qué te puedo ayudar? Selecciona una opción.</p>
 
-    <div id="input-area">
-      <input type="text" id="msg" placeholder="Escribe tu pregunta..." disabled />
-      <button onclick="enviar()" disabled>Enviar</button>
-    </div>
+  <button class="boton-opcion" onclick="opcionSeleccionada('Quiero asesoramiento')">🔍 Asesoramiento</button>
+  <button class="boton-opcion" onclick="opcionSeleccionada('Quiero comprar')">🛒 Comprar</button>
+  <button class="boton-opcion" onclick="opcionSeleccionada('Necesito soporte técnico')">🛠 Soporte Técnico</button>
+
+  <div id="chat"></div>
+  <div id="input-area">
+    <input type="text" id="msg" placeholder="Escribe tu pregunta..." disabled />
+    <button onclick="enviar()" disabled>Enviar</button>
   </div>
 
   <script>
-    if (!localStorage.getItem('chat_session_id')) {
-      localStorage.setItem('chat_session_id', 'cliente_' + Math.floor(Math.random() * 1000000));
-    }
-
-    const sessionId = localStorage.getItem('chat_session_id');
-    const chat = document.getElementById('chat');
-    let typingEl = null;
-
-    function agregarMensaje(texto, clase) {
-      const div = document.createElement('div');
-      div.className = `msg ${clase}`;
-      div.innerHTML = texto;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    function agregarEscribiendo() {
-      typingEl = document.createElement('div');
-      typingEl.className = 'msg bot typing';
-      typingEl.innerHTML = `<span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
-      chat.appendChild(typingEl);
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    function quitarEscribiendo() {
-      if (typingEl) {
-        typingEl.remove();
-        typingEl = null;
-      }
-    }
-
-    function escapeHTML(text) {
-      return text.replace(/[&<>"']/g, function (match) {
-        const escapeMap = {
-          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-        };
-        return escapeMap[match];
-      });
-    }
-
-    async function enviar() {
-      const input = document.getElementById('msg');
-      const pregunta = input.value.trim();
-      if (!pregunta) return;
-
-      agregarMensaje(escapeHTML(pregunta), 'user');
-      input.value = '';
-      agregarEscribiendo();
-
-      try {
-        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook/ai_assistant', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: pregunta, sessionId })
-        });
-
-        quitarEscribiendo();
-        const raw = await res.text();
-
-        let respuestaTexto = raw;
-        try {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed[0]?.RespuestaFinal) {
-            respuestaTexto = parsed[0].RespuestaFinal;
-          } else if (parsed.RespuestaFinal) {
-            respuestaTexto = parsed.RespuestaFinal;
-          }
-        } catch (e) {
-          console.warn('Respuesta no es JSON válido');
-        }
-
-        const html = respuestaTexto
-          .replace(/\n/g, "<br>")
-          .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
-
-        agregarMensaje(html, 'bot');
-
-      } catch (err) {
-        quitarEscribiendo();
-        agregarMensaje('❌ Error al conectar con el servidor', 'bot');
-        console.error(err);
-      }
-    }
-
-    function mostrarMensajeInicial() {
-      const mensajeInicial = `
-        <strong>Hola 👋, soy tu asistente virtual de <span style="color:#0056b3">AG Electrónica</span></strong><br>
-        ¿En qué te puedo ayudar? Selecciona una opción.<br><br>
-        <ul style="list-style: none; padding-left: 0;">
-          <li><button class="opcion-btn" onclick="opcionSeleccionada('Quiero asesoramiento')">🔍 Asesoramiento</button></li>
-          <li><button class="opcion-btn" onclick="opcionSeleccionada('Quiero comprar')">🛒 Comprar</button></li>
-          <li><a class="opcion-btn" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a></li>
-        </ul>
-      `;
-      agregarMensaje(mensajeInicial, 'bot');
-      // Bloquea input hasta que elija una opción
-      document.getElementById('msg').disabled = true;
-      document.querySelector('#input-area button').disabled = true;
-    }
-
     function opcionSeleccionada(texto) {
-      document.getElementById('msg').value = texto;
+      const ultimaHora = localStorage.getItem('chat_last_used');
+      const ahora = new Date().getTime();
+      const inactivo = !ultimaHora || (ahora - parseInt(ultimaHora)) > 300000; // 5 minutos
+
+      if (!localStorage.getItem('chat_session_id') || inactivo) {
+        const nuevoID = 'cliente_' + Math.floor(Math.random() * 1000000);
+        localStorage.setItem('chat_session_id', nuevoID);
+        console.log("🆕 Nueva sesión iniciada:", nuevoID);
+      } else {
+        console.log("♻️ Continuando sesión:", localStorage.getItem('chat_session_id'));
+      }
+
+      localStorage.setItem('chat_last_used', ahora.toString());
+
+      enviar(texto);
       document.getElementById('msg').disabled = false;
       document.querySelector('#input-area button').disabled = false;
-      enviar();
     }
 
-    window.onload = () => {
-      mostrarMensajeInicial();
-    };
+    function enviar(textoManual) {
+      const texto = textoManual || document.getElementById('msg').value;
+      const chat = document.getElementById('chat');
+      const sessionId = localStorage.getItem('chat_session_id');
 
-    document.getElementById('msg').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        enviar();
-      }
-    });
+      const mensaje = document.createElement('p');
+      mensaje.textContent = `🧑 Usuario (${sessionId}): ${texto}`;
+      chat.appendChild(mensaje);
+
+      document.getElementById('msg').value = '';
+
+      // Aquí iría la llamada al backend con webhook
+    }
   </script>
 </body>
 </html>
