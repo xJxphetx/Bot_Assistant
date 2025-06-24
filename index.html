@@ -1,29 +1,111 @@
+<!-- CORREGIDO HTML -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Chat con AG Electrónica</title>
+  <meta charset="UTF-8" />
+  <title>AG Electrónica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    /* Tu CSS original permanece igual... */
+    /* --- CSS original intacto --- */
+    * { box-sizing: border-box; }
     body {
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #f2f2f2;
-      padding: 30px;
+      background: linear-gradient(to bottom, #e6f0ff, #ffffff);
+      height: 100vh;
       display: flex;
       justify-content: center;
+      align-items: stretch;
     }
-    .container { background: #fff; border-radius: 10px; max-width: 700px; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 20px; }
-    h2 { text-align: center; margin-bottom: 20px; color: #1a1a1a; }
-    #chat { max-height: 400px; overflow-y: auto; margin-bottom: 20px; }
-    .msg { margin: 10px 0; padding: 10px 15px; border-radius: 15px; max-width: 85%; white-space: pre-line; word-wrap: break-word; }
-    .user { background-color: #d8ecff; align-self: flex-end; text-align: right; margin-left: auto; }
-    .bot { background-color: #e8e8e8; align-self: flex-start; color: #333; }
-    #input-area { display: flex; gap: 10px; }
-    #msg { flex: 1; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; }
-    button { padding: 10px 16px; background-color: #007bff; color: white; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; }
+    .container {
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+      max-width: 700px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      background-color: #0056b3;
+      color: #fff;
+    }
+    .header img {
+      height: 36px;
+      margin-right: 12px;
+    }
+    .header h2 {
+      font-size: 20px;
+      margin: 0;
+    }
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      scroll-behavior: smooth;
+    }
+    .msg {
+      margin: 10px 0;
+      padding: 12px 16px;
+      border-radius: 18px;
+      max-width: 75%;
+      word-wrap: break-word;
+      line-height: 1.4;
+      font-size: 15px;
+      animation: fadeIn 0.3s ease-in;
+    }
+    .user {
+      background: #cce5ff;
+      align-self: flex-end;
+      text-align: right;
+      border-top-right-radius: 0;
+    }
+    .bot {
+      background: #eeeeee;
+      align-self: flex-start;
+      color: #333;
+      border-top-left-radius: 0;
+    }
+    #input-area {
+      display: flex;
+      padding: 15px 20px;
+      border-top: 1px solid #ddd;
+      background-color: #f0f0f0;
+    }
+    #msg {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      outline: none;
+    }
+    button {
+      padding: 10px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
     button:hover { background-color: #0056b3; }
-    .typing { display: flex; gap: 6px; align-items: center; }
-    .dot { height: 8px; width: 8px; background-color: #777; border-radius: 50%; display: inline-block; animation: blink 1.4s infinite both; }
+    .typing { display: flex; gap: 6px; align-items: center; padding: 10px; }
+    .dot {
+      height: 8px; width: 8px;
+      background-color: #555;
+      border-radius: 50%;
+      animation: blink 1.4s infinite both;
+    }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
     @keyframes blink {
@@ -31,126 +113,183 @@
       20% { opacity: 1; transform: scale(1.3); }
       100% { opacity: 0.2; transform: scale(1); }
     }
-    a { color: #0056b3; text-decoration: underline; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    a { color: #007bff; text-decoration: underline; }
+    .opcion-btn {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #5296df;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: left;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .opcion-btn:hover { background-color: #0056b3; transform: scale(1.02); }
+    @media (max-width: 600px) {
+      .header h2 { font-size: 16px; }
+      .header img { height: 30px; }
+      button { font-size: 14px; }
+      #msg { font-size: 14px; }
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <h2>Chat con AG Electrónica</h2>
-  <div id="chat"></div>
-  <div id="input-area">
-    <input type="text" id="msg" placeholder="Escribe tu pregunta..." />
-    <button onclick="enviar()">Enviar</button>
+  <div class="container">
+    <div class="header">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9pJ85Zy6nLEQ8Xqs4KlR_vcKYNHUmEY1JUw&s" alt="Logo AG Electrónica" />
+      <h2>AG-ente Electrónica</h2>
+    </div>
+
+    <div id="chat"></div>
+
+    <div id="input-area">
+      <input type="text" id="msg" placeholder="Escribe tu pregunta..." disabled />
+      <button onclick="enviar()" disabled>Enviar</button>
+    </div>
   </div>
-</div>
 
-<script>
-  const RESETEADORES = ["quiero comprar", "quiero asesoramiento", "necesito soporte técnico"];
-  const INACTIVIDAD_MS = 5 * 60 * 1000;
+  <script>
+    const RESETEADORES = ["quiero comprar", "quiero asesoramiento", "necesito soporte técnico"];
+    const INACTIVIDAD_MS = 5 * 60 * 1000;
 
-  function generarSessionId() {
-    const nuevoId = 'cliente_' + Math.floor(Math.random() * 1000000);
-    localStorage.setItem('chat_session_id', nuevoId);
-    console.log("🔁 Nuevo sessionId generado:", nuevoId);
-  }
-
-  function verificarSession(pregunta) {
-    const ahora = Date.now();
-    const ultima = parseInt(localStorage.getItem('chat_last_used') || '0', 10);
-    const mensajeBase = pregunta.toLowerCase().trim();
-
-    const necesitaReiniciar = (
-      !localStorage.getItem('chat_session_id') ||
-      (ahora - ultima > INACTIVIDAD_MS) ||
-      RESETEADORES.includes(mensajeBase)
-    );
-
-    if (necesitaReiniciar) {
-      generarSessionId();
+    function generarNuevoId() {
+      const nuevo = 'cliente_' + Math.floor(Math.random() * 1000000);
+      localStorage.setItem('chat_session_id', nuevo);
+      console.log("🆕 Nuevo sessionId:", nuevo);
     }
 
-    localStorage.setItem('chat_last_used', ahora.toString());
-    return localStorage.getItem('chat_session_id');
-  }
+    function actualizarSessionId(pregunta) {
+      const ahora = Date.now();
+      const ultima = parseInt(localStorage.getItem('chat_last_used') || '0', 10);
+      const texto = pregunta.toLowerCase().trim();
 
-  const chat = document.getElementById('chat');
-  let typingEl = null;
+      const debeReiniciar =
+        RESETEADORES.includes(texto) ||
+        !localStorage.getItem('chat_session_id') ||
+        (ahora - ultima > INACTIVIDAD_MS);
 
-  function agregarMensaje(texto, clase) {
-    const div = document.createElement('div');
-    div.className = `msg ${clase}`;
-    div.innerHTML = texto;
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  function agregarEscribiendo() {
-    typingEl = document.createElement('div');
-    typingEl.className = 'msg bot typing';
-    typingEl.innerHTML = `<span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
-    chat.appendChild(typingEl);
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  function quitarEscribiendo() {
-    if (typingEl) {
-      typingEl.remove();
-      typingEl = null;
-    }
-  }
-
-  function escapeHTML(text) {
-    return text.replace(/[&<>"']/g, function (match) {
-      const escapeMap = {
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-      };
-      return escapeMap[match];
-    });
-  }
-
-  async function enviar() {
-    const input = document.getElementById('msg');
-    const pregunta = input.value.trim();
-    if (!pregunta) return;
-
-    const sessionId = verificarSession(pregunta);
-    agregarMensaje(escapeHTML(pregunta), 'user');
-    input.value = '';
-    agregarEscribiendo();
-
-    try {
-      const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook/ai_assistant', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: pregunta, sessionId })
-      });
-
-      quitarEscribiendo();
-      const raw = await res.text();
-
-      let respuestaTexto = raw;
-      try {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed[0]?.RespuestaFinal) {
-          respuestaTexto = parsed[0].RespuestaFinal;
-        } else if (parsed.RespuestaFinal) {
-          respuestaTexto = parsed.RespuestaFinal;
-        }
-      } catch (e) {
-        console.warn('Respuesta no es JSON válido');
+      if (debeReiniciar) {
+        generarNuevoId();
       }
 
-      const html = respuestaTexto
-        .replace(/\n/g, "<br>")
-        .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
-
-      agregarMensaje(html, 'bot');
-    } catch (err) {
-      quitarEscribiendo();
-      agregarMensaje('❌ Error al conectar con el servidor', 'bot');
-      console.error(err);
+      localStorage.setItem('chat_last_used', ahora.toString());
+      return localStorage.getItem('chat_session_id');
     }
-  }
-</script>
+
+    const chat = document.getElementById('chat');
+    let typingEl = null;
+
+    function agregarMensaje(texto, clase) {
+      const div = document.createElement('div');
+      div.className = `msg ${clase}`;
+      div.innerHTML = texto;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function agregarEscribiendo() {
+      typingEl = document.createElement('div');
+      typingEl.className = 'msg bot typing';
+      typingEl.innerHTML = `<span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
+      chat.appendChild(typingEl);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function quitarEscribiendo() {
+      if (typingEl) {
+        typingEl.remove();
+        typingEl = null;
+      }
+    }
+
+    function escapeHTML(text) {
+      return text.replace(/[&<>"']/g, match => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[match]));
+    }
+
+    async function enviar() {
+      const input = document.getElementById('msg');
+      const pregunta = input.value.trim();
+      if (!pregunta) return;
+
+      const sessionId = actualizarSessionId(pregunta);
+      agregarMensaje(escapeHTML(pregunta), 'user');
+      input.value = '';
+      agregarEscribiendo();
+
+      try {
+        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook/ai_assistant', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: pregunta, sessionId })
+        });
+
+        quitarEscribiendo();
+        const raw = await res.text();
+        let respuestaTexto = raw;
+
+        try {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed[0]?.RespuestaFinal) {
+            respuestaTexto = parsed[0].RespuestaFinal;
+          } else if (parsed.RespuestaFinal) {
+            respuestaTexto = parsed.RespuestaFinal;
+          }
+        } catch (e) {
+          console.warn('Respuesta no es JSON válido');
+        }
+
+        const html = respuestaTexto
+          .replace(/\n/g, "<br>")
+          .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+        agregarMensaje(html, 'bot');
+      } catch (err) {
+        quitarEscribiendo();
+        agregarMensaje('❌ Error al conectar con el servidor', 'bot');
+        console.error(err);
+      }
+    }
+
+    function mostrarMensajeInicial() {
+      const mensajeInicial = `
+        <strong>Hola 👋, soy tu asistente virtual de <span style="color:#0056b3">AG Electrónica</span></strong><br>
+        ¿En qué te puedo ayudar? Selecciona una opción.<br><br>
+        <ul style="list-style: none; padding-left: 0;">
+          <li><button class="opcion-btn" onclick="opcionSeleccionada('Quiero asesoramiento')">🔍 Asesoramiento</button></li>
+          <li><button class="opcion-btn" onclick="opcionSeleccionada('Quiero comprar')">🛒 Comprar</button></li>
+          <li><a class="opcion-btn" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a></li>
+        </ul>
+      `;
+      agregarMensaje(mensajeInicial, 'bot');
+      document.getElementById('msg').disabled = true;
+      document.querySelector('#input-area button').disabled = true;
+    }
+
+    function opcionSeleccionada(texto) {
+      document.getElementById('msg').value = texto;
+      document.getElementById('msg').disabled = false;
+      document.querySelector('#input-area button').disabled = false;
+      enviar();
+    }
+
+    window.onload = () => { mostrarMensajeInicial(); };
+    document.getElementById('msg').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        enviar();
+      }
+    });
+  </script>
 </body>
 </html>
