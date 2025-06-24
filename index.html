@@ -148,11 +148,10 @@
     }
 
     .opcion-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin: 6px 6px 0 0;
-      padding: 10px 16px;
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 12px 16px;
       border: none;
       border-radius: 8px;
       background-color: #5296df;
@@ -160,18 +159,13 @@
       cursor: pointer;
       font-size: 14px;
       font-weight: bold;
+      text-align: left;
       transition: background-color 0.3s, transform 0.2s;
     }
 
     .opcion-btn:hover {
       background-color: #0056b3;
-      transform: scale(1.05);
-    }
-
-    .opcion-btn svg {
-      width: 18px;
-      height: 18px;
-      fill: white;
+      transform: scale(1.02);
     }
 
     @media (max-width: 600px) {
@@ -192,8 +186,8 @@
     <div id="chat"></div>
 
     <div id="input-area">
-      <input type="text" id="msg" placeholder="Escribe tu pregunta..." />
-      <button onclick="enviar()">Enviar</button>
+      <input type="text" id="msg" placeholder="Escribe tu pregunta..." disabled />
+      <button onclick="enviar()" disabled>Enviar</button>
     </div>
   </div>
 
@@ -248,7 +242,7 @@
       agregarEscribiendo();
 
       try {
-        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook/ai_assistant', {
+        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook-test/assistant-openia', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question: pregunta, sessionId })
@@ -283,27 +277,25 @@
     }
 
     function mostrarMensajeInicial() {
-  const mensajeInicial = `
-    <strong>Hola 👋, soy tu asistente virtual de <span style="color:#0056b3">AG Electrónica</span></strong><br>
-    ¿En qué te puedo ayudar?<br><br>
-    <button class="opcion-btn" onclick="opcionSeleccionada('Quiero asesoramiento')">
-      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.33 19.45c.53.1.72-.23.72-.5v-1.7c-2.95.64-3.58-1.42-3.58-1.42-.48-1.23-1.17-1.56-1.17-1.56-.96-.66.07-.65.07-.65 1.06.07 1.61 1.1 1.61 1.1.95 1.63 2.5 1.16 3.11.89.1-.69.37-1.16.68-1.43-2.36-.27-4.86-1.18-4.86-5.26 0-1.16.42-2.11 1.1-2.85-.11-.27-.48-1.36.1-2.82 0 0 .89-.28 2.9 1.08A10 10 0 0112 6.8c.9.004 1.81.12 2.66.35 2.02-1.36 2.9-1.08 2.9-1.08.58 1.46.22 2.55.11 2.82.68.74 1.1 1.7 1.1 2.85 0 4.1-2.5 5-4.89 5.26.38.32.72.94.72 1.9v2.81c0 .27.19.6.73.5A10.01 10.01 0 0012 2z"/></svg>
-      Asesoramiento
-    </button>
-    <button class="opcion-btn" onclick="opcionSeleccionada('Quiero comprar')">
-      <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10-2H8V6h12v8zm0-10H8c-1.1 0-2 .9-2 2v12h2v-2h10v2h2V8c0-1.1-.9-2-2-2z"/></svg>
-      Comprar
-    </button>
-    <a class="opcion-btn" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">
-      <svg viewBox="0 0 24 24"><path d="M20 3H4C2.9 3 2 3.9 2 5v16l4-4h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4.2 11.1c-.3.8-1.4 1.6-2.4 1.8-.7.1-1.7.2-5-.9-4.4-1.3-5.2-4.2-5.3-4.4s-.1-.8.2-1.1l1.1-1.1c.3-.3.8-.3 1.1-.1.3.1 1.1.5 1.3.6.3.1.5.2.6.4s.2.4.1.6c-.1.2-.2.4-.4.6s-.4.5-.6.6c-.1.1-.2.2 0 .5.2.3.9 1.4 2.2 2 .5.2 1 .2 1.3.1.4-.1.9-.6 1.1-.9.2-.3.5-.3.7-.2l1.3.6c.4.2.6.3.6.6.1.2 0 .4-.1.5z"/></svg>
-      Soporte Técnico
-    </a>
-  `;
-  agregarMensaje(mensajeInicial, 'bot');
-}
+      const mensajeInicial = `
+        <strong>Hola 👋, soy tu asistente virtual de <span style="color:#0056b3">AG Electrónica</span></strong><br>
+        ¿En qué te puedo ayudar? Selecciona una opción.<br><br>
+        <ul style="list-style: none; padding-left: 0;">
+          <li><button class="opcion-btn" onclick="opcionSeleccionada('Quiero asesoramiento')">🔍 Asesoramiento</button></li>
+          <li><button class="opcion-btn" onclick="opcionSeleccionada('Quiero comprar')">🛒 Comprar</button></li>
+          <li><a class="opcion-btn" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a></li>
+        </ul>
+      `;
+      agregarMensaje(mensajeInicial, 'bot');
+      // Bloquea input hasta que elija una opción
+      document.getElementById('msg').disabled = true;
+      document.querySelector('#input-area button').disabled = true;
+    }
 
     function opcionSeleccionada(texto) {
       document.getElementById('msg').value = texto;
+      document.getElementById('msg').disabled = false;
+      document.querySelector('#input-area button').disabled = false;
       enviar();
     }
 
