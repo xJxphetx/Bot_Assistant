@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -16,7 +15,6 @@
       justify-content: center;
       align-items: stretch;
     }
-
     .container {
       background: #ffffff;
       display: flex;
@@ -28,7 +26,6 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
-
     .header {
       display: flex;
       align-items: center;
@@ -36,17 +33,14 @@
       background-color: #0056b3;
       color: #fff;
     }
-
     .header img {
       height: 36px;
       margin-right: 12px;
     }
-
     .header h2 {
       font-size: 20px;
       margin: 0;
     }
-
     #chat {
       flex: 1;
       overflow-y: auto;
@@ -56,7 +50,6 @@
       flex-direction: column;
       scroll-behavior: smooth;
     }
-
     .msg {
       margin: 10px 0;
       padding: 12px 16px;
@@ -67,28 +60,24 @@
       font-size: 15px;
       animation: fadeIn 0.3s ease-in;
     }
-
     .user {
       background: #cce5ff;
       align-self: flex-end;
       text-align: right;
       border-top-right-radius: 0;
     }
-
     .bot {
       background: #eeeeee;
       align-self: flex-start;
       color: #333;
       border-top-left-radius: 0;
     }
-
     #input-area {
       display: flex;
       padding: 15px 20px;
       border-top: 1px solid #ddd;
       background-color: #f0f0f0;
     }
-
     #msg {
       flex: 1;
       padding: 10px 14px;
@@ -97,7 +86,6 @@
       font-size: 16px;
       outline: none;
     }
-
     button {
       padding: 10px 16px;
       background-color: #007bff;
@@ -108,18 +96,15 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
     button:hover {
       background-color: #0056b3;
     }
-
     .typing {
       display: flex;
       gap: 6px;
       align-items: center;
       padding: 10px;
     }
-
     .dot {
       height: 8px;
       width: 8px;
@@ -127,7 +112,6 @@
       border-radius: 50%;
       animation: blink 1.4s infinite both;
     }
-
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
 
@@ -142,10 +126,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    a {
-      color: #007bff;
-      text-decoration: underline;
-    }
+    a { color: #007bff; text-decoration: underline; }
 
     .opcion-btn {
       display: block;
@@ -165,6 +146,26 @@
 
     .opcion-btn:hover {
       background-color: #0056b3;
+      transform: scale(1.02);
+    }
+
+    .btn-volver {
+      display: inline-block;
+      width: auto;
+      padding: 8px 14px;
+      font-size: 13px;
+      background-color: #5296df;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn-volver:hover {
+      background-color: #003f8a;
       transform: scale(1.02);
     }
 
@@ -192,15 +193,16 @@
   </div>
 
   <script>
-    if (!localStorage.getItem('chat_session_id')) {
-      localStorage.setItem('chat_session_id', 'cliente_' + Math.floor(Math.random() * 1000000));
-    }
-
-    const sessionId = localStorage.getItem('chat_session_id');
     const chat = document.getElementById('chat');
     let typingEl = null;
 
-    function agregarMensaje(texto, clase) {
+    const sessionId = localStorage.getItem('chat_session_id') || (() => {
+      const id = 'cliente_' + Math.floor(Math.random() * 1000000);
+      localStorage.setItem('chat_session_id', id);
+      return id;
+    })();
+
+    function agregarMensaje(texto, clase = 'bot') {
       const div = document.createElement('div');
       div.className = `msg ${clase}`;
       div.innerHTML = texto;
@@ -217,19 +219,13 @@
     }
 
     function quitarEscribiendo() {
-      if (typingEl) {
-        typingEl.remove();
-        typingEl = null;
-      }
+      if (typingEl) typingEl.remove();
     }
 
     function escapeHTML(text) {
-      return text.replace(/[&<>"']/g, function (match) {
-        const escapeMap = {
-          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-        };
-        return escapeMap[match];
-      });
+      return text.replace(/[&<>"']/g, match => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[match]);
     }
 
     async function enviar() {
@@ -250,60 +246,95 @@
 
         quitarEscribiendo();
         const raw = await res.text();
-
-        let respuestaTexto = raw;
+        let respuesta = raw;
         try {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed[0]?.RespuestaFinal) {
-            respuestaTexto = parsed[0].RespuestaFinal;
-          } else if (parsed.RespuestaFinal) {
-            respuestaTexto = parsed.RespuestaFinal;
-          }
-        } catch (e) {
-          console.warn('Respuesta no es JSON válido');
-        }
+          if (parsed?.RespuestaFinal) respuesta = parsed.RespuestaFinal;
+        } catch {}
 
-        const html = respuestaTexto
-          .replace(/\n/g, "<br>")
-          .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
-
-        agregarMensaje(html, 'bot');
-
-      } catch (err) {
+        const html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>') +
+          `<br><br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`;
+        agregarMensaje(html);
+      } catch {
         quitarEscribiendo();
-        agregarMensaje('❌ Error al conectar con el servidor', 'bot');
-        console.error(err);
+        agregarMensaje('❌ Error al conectar con el servidor');
       }
     }
 
     function mostrarMensajeInicial() {
-      const mensajeInicial = `
+      agregarMensaje(`
         <strong>Hola 👋, soy tu asistente virtual de <span style="color:#0056b3">AG Electrónica</span></strong><br>
-        ¿En qué te puedo ayudar? Selecciona una opción.<br><br>
-        <ul style="list-style: none; padding-left: 0;">
-          <li><button class="opcion-btn" onclick="opcionSeleccionada('Quiero asesoramiento')">🔍 Asesoramiento</button></li>
-          <li><button class="opcion-btn" onclick="opcionSeleccionada('Quiero comprar')">🛒 Comprar</button></li>
-          <li><a class="opcion-btn" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a></li>
+        ¿En qué te puedo ayudar?<br><ul style="list-style: none; padding-left: 0;">
+        <li><button class="opcion-btn" onclick="opcionSeleccionada('Asesoramiento')">🔍 Asesoramiento</button></li>
+        <li><button class="opcion-btn" onclick="opcionSeleccionada('Comprar')">🛒 Comprar</button></li>
+        <li><a class="opcion-btn" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a></li>
         </ul>
-      `;
-      agregarMensaje(mensajeInicial, 'bot');
-      // Bloquea input hasta que elija una opción
+      `);
       document.getElementById('msg').disabled = true;
       document.querySelector('#input-area button').disabled = true;
     }
 
     function opcionSeleccionada(texto) {
-      document.getElementById('msg').value = texto;
-      document.getElementById('msg').disabled = false;
-      document.querySelector('#input-area button').disabled = false;
-      enviar();
+      agregarMensaje(texto, 'user');
+      if (texto === 'Comprar') {
+        agregarEscribiendo();
+        setTimeout(() => {
+          quitarEscribiendo();
+          agregarMensaje(`
+            <strong>¿Qué deseas comprar?</strong><br>
+            <ul style="list-style: none; padding-left: 0;">
+              <li><button class="opcion-btn" onclick="opcionFinal('Componentes Electrónicos')">🔌 Componentes Electrónicos</button></li>
+              <li><button class="opcion-btn" onclick="opcionFinal('Tarjetas de Desarrollo IoT / AI')">💻 Tarjetas de Desarrollo IoT / AI</button></li>
+              <li><button class="opcion-btn" onclick="opcionFinal('Fuentes, Baterías y Cautines')">🔋 Fuentes, Baterías y Cautines</button></li>
+              <li><button class="opcion-btn" onclick="opcionFinal('Iluminación LED')">💡 Iluminación LED</button></li>
+              <li><button class="opcion-btn" onclick="opcionFinal('Impresión 3D')">🖨️ Impresión 3D</button></li>
+              <li><button class="opcion-btn" onclick="opcionFinal('Instrumentación')">📟 Instrumentación</button></li>
+              <li><button class="opcion-btn" onclick="opcionFinal('Drones y Refaccionamiento')">🚁 Drones y Refaccionamiento</button></li>
+            </ul>
+          `);
+        }, 3000);
+      } else {
+        document.getElementById('msg').value = texto;
+        document.getElementById('msg').disabled = false;
+        document.querySelector('#input-area button').disabled = false;
+        enviar();
+      }
     }
 
-    window.onload = () => {
-      mostrarMensajeInicial();
-    };
+    function opcionFinal(texto) {
+      agregarMensaje(texto, 'user');
+      const botones = document.querySelectorAll('.opcion-btn');
+      botones.forEach(btn => btn.disabled = true);
+      agregarEscribiendo();
 
-    document.getElementById('msg').addEventListener('keydown', function (e) {
+      setTimeout(() => {
+        quitarEscribiendo();
+        const respuestas = {
+          'Componentes Electrónicos': '🔌 ¿Qué componente estás buscando? Estoy aquí para ayudarte.',
+          'Tarjetas de Desarrollo IoT / AI': '💻 ¿Qué tarjeta de desarrollo necesitas? Te puedo orientar.',
+          'Fuentes, Baterías y Cautines': '🔋 ¿Estás buscando una fuente, batería o herramienta específica?',
+          'Iluminación LED': '💡 ¿Qué tipo de iluminación LED estás buscando?',
+          'Impresión 3D': '🖨️ ¿Buscas filamento, impresoras o repuestos? Estoy listo para ayudarte.',
+          'Instrumentación': '📟 ¿Qué instrumento necesitas? Multímetros, osciloscopios... dime cuál.',
+          'Drones y Refaccionamiento': '🚁 ¿Buscas un dron completo o piezas de refacción? Estoy aquí para ayudarte.'
+        };
+        const respuesta = respuestas[texto] || '✅ Selección registrada. ¿En qué más puedo ayudarte?';
+        agregarMensaje(`${respuesta}<br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`);
+        document.getElementById('msg').disabled = false;
+        document.querySelector('#input-area button').disabled = false;
+      }, 3000);
+    }
+
+    function reiniciarConversacion() {
+      chat.innerHTML = '';
+      document.getElementById('msg').value = '';
+      document.getElementById('msg').disabled = true;
+      document.querySelector('#input-area button').disabled = true;
+      mostrarMensajeInicial();
+    }
+
+    window.onload = mostrarMensajeInicial;
+    document.getElementById('msg').addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         e.preventDefault();
         enviar();
