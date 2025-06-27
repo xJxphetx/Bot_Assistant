@@ -249,8 +249,16 @@
         let respuesta = raw;
         try {
           const parsed = JSON.parse(raw);
-          if (parsed?.RespuestaFinal) respuesta = parsed.RespuestaFinal;
-        } catch {}
+          if (parsed?.RespuestaFinal){
+            respuesta = parsed.RespuestaFinal
+              .replace(/\\n/g, '<br>')
+              .replace(/\\"/g, '"')
+              .replace(/\\\*/g, '*')
+              .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
+          }
+        } catch {
+          respuesta = raw.replace(/\n/g, '<br>');
+        }
 
         const html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>') +
           `<br><br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`;
