@@ -23,7 +23,7 @@
       flex-direction: column;
       width: 100%;
       max-width: 700px;
-      height: 100dvh; /* ← importante: usar 100dvh para móviles modernos */
+      height: 100dvh;
       background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
@@ -203,6 +203,7 @@
   <script>
     const chat = document.getElementById('chat');
     let typingEl = null;
+    let webhook = '';
 
     const sessionId = localStorage.getItem('chat_session_id') || (() => {
       const id = 'cliente_' + Math.floor(Math.random() * 1000000);
@@ -239,14 +240,14 @@
     async function enviar() {
       const input = document.getElementById('msg');
       const pregunta = input.value.trim();
-      if (!pregunta) return;
+      if (!pregunta || !webhook) return;
 
       agregarMensaje(escapeHTML(pregunta), 'user');
       input.value = '';
       agregarEscribiendo();
 
       try {
-        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook/ai_assistant', {
+        const res = await fetch(webhook, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question: pregunta, sessionId })
@@ -282,9 +283,19 @@
       document.querySelector('#input-area button').disabled = true;
     }
 
+    function seleccionarFlujo(url) {
+      webhook = url;
+      document.getElementById('msg').disabled = false;
+      document.querySelector('#input-area button').disabled = false;
+      /*agregarMensaje("✅ Flujo iniciado. Escribe tu mensaje cuando gustes.");*/
+    }
+
     function opcionSeleccionada(texto) {
       agregarMensaje(texto, 'user');
+
       if (texto === 'Comprar') {
+        seleccionarFlujo('https://iaagelectronica1.app.n8n.cloud/webhook/Sales');
+
         agregarEscribiendo();
         setTimeout(() => {
           quitarEscribiendo();
@@ -300,14 +311,24 @@
               <li><button class="opcion-btn" onclick="opcionFinal('Drones y Refaccionamiento')">🚁 Drones y Refaccionamiento</button></li>
             </ul>
           `);
-        }, 1000);
-      } else {
-        document.getElementById('msg').value = texto;
+        }, 3000);
+      }
+
+      else if (texto === 'Asesoramiento') {
+        seleccionarFlujo('https://iaagelectronica1.app.n8n.cloud/webhook/Advice');
+
+        document.getElementById('msg').value = '';
         document.getElementById('msg').disabled = false;
         document.querySelector('#input-area button').disabled = false;
-        enviar();
+
+        agregarEscribiendo();
+        setTimeout(() => {
+          quitarEscribiendo();
+          agregarMensaje("✏️ Escribe tu consulta de asesoramiento.");
+        },3000);
       }
     }
+
 
     function opcionFinal(texto) {
       agregarMensaje(texto, 'user');
@@ -330,10 +351,11 @@
         agregarMensaje(`${respuesta}<br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`);
         document.getElementById('msg').disabled = false;
         document.querySelector('#input-area button').disabled = false;
-      }, 1500);
+      }, 3000);
     }
 
     function reiniciarConversacion() {
+      webhook = '';
       chat.innerHTML = '';
       document.getElementById('msg').value = '';
       document.getElementById('msg').disabled = true;
