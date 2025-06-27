@@ -10,16 +10,18 @@
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(to bottom, #e6f0ff, #ffffff);
-      height: 100vh;
+      /*height: 100vh;*/
       display: flex;
       justify-content: center;
-      align-items: stretch;
+      /*align-items: stretch;*/
+      align-items: flex-start;
     }
     .container {
       background: #ffffff;
       display: flex;
       flex-direction: column;
-      height: 100%;
+      min-height: 100vh;
+      /*height: 100%;*/
       width: 100%;
       max-width: 700px;
       border-radius: 12px;
@@ -54,7 +56,8 @@
       margin: 10px 0;
       padding: 12px 16px;
       border-radius: 18px;
-      max-width: 75%;
+      max-width: 100%;
+      /*max-width: 75%;*/
       word-wrap: break-word;
       line-height: 1.4;
       font-size: 15px;
@@ -170,10 +173,20 @@
     }
 
     @media (max-width: 600px) {
+      .container{
+        padding: 0 10px;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
       .header h2 { font-size: 16px; }
       .header img { height: 30px; }
+      .msg { font-size: 14px; padding: 10px 12px; }
+      .opcion-btn, .btn-volver { font-size: 13px; padding: 10px 12px; }
       button { font-size: 14px; }
       #msg { font-size: 14px; }
+      button { font-size:  14px; padding: 10px 14px; }
+      #input-area { padding: 12px; flex-wrap: wrap; gap: 10px;}
     }
   </style>
 </head>
@@ -238,7 +251,7 @@
       agregarEscribiendo();
 
       try {
-        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook/ai_assistant', {
+        const res = await fetch('https://iaagelectronica1.app.n8n.cloud/webhook-test/assistant-openia', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question: pregunta, sessionId })
