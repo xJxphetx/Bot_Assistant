@@ -249,16 +249,8 @@
         let respuesta = raw;
         try {
           const parsed = JSON.parse(raw);
-          if (parsed?.RespuestaFinal){
-            respuesta = parsed.RespuestaFinal
-              .replace(/\\n/g, '<br>')
-              .replace(/\\"/g, '"')
-              .replace(/\\\*/g, '*')
-              .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
-          }
-        } catch {
-          respuesta = raw.replace(/\n/g, '<br>');
-        }
+          if (parsed?.RespuestaFinal) respuesta = parsed.RespuestaFinal;
+        } catch {}
 
         const html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>') +
           `<br><br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`;
@@ -300,7 +292,7 @@
               <li><button class="opcion-btn" onclick="opcionFinal('Drones y Refaccionamiento')">🚁 Drones y Refaccionamiento</button></li>
             </ul>
           `);
-        }, 3000);
+        }, 1000);
       } else {
         document.getElementById('msg').value = texto;
         document.getElementById('msg').disabled = false;
@@ -330,7 +322,7 @@
         agregarMensaje(`${respuesta}<br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`);
         document.getElementById('msg').disabled = false;
         document.querySelector('#input-area button').disabled = false;
-      }, 3000);
+      }, 1500);
     }
 
     function reiniciarConversacion() {
