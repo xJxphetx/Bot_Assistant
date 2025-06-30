@@ -274,8 +274,8 @@
       agregarMensaje(`
         <strong>Hola 👋, soy tu asistente virtual de <span style="color:#0056b3">AG Electrónica</span></strong><br>
         ¿En qué te puedo ayudar?<br><ul style="list-style: none; padding-left: 0;">
-        <li><button class="opcion-btn" onclick="opcionSeleccionada('Asesoramiento')">🔍 Asesoramiento</button></li>
-        <li><button class="opcion-btn" onclick="opcionSeleccionada('Comprar')">🛒 Comprar</button></li>
+        <li><button class="opcion-btn" onclick="opcionSeleccionada('🔍 Quiero asesoramiento')">🔍 Asesoramiento</button></li>
+        <li><button class="opcion-btn" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button></li>
         <li><a class="opcion-btn" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a></li>
         </ul>
       `);
@@ -293,7 +293,7 @@
     function opcionSeleccionada(texto) {
       agregarMensaje(texto, 'user');
 
-      if (texto === 'Comprar') {
+      if (texto === '🛒 Quiero comprar') {
         seleccionarFlujo('https://iaagelectronica1.app.n8n.cloud/webhook/Sales');
 
         agregarEscribiendo();
@@ -314,17 +314,16 @@
         }, 3000);
       }
 
-      else if (texto === 'Asesoramiento') {
+      else if (texto === '🔍 Quiero asesoramiento') {
         seleccionarFlujo('https://iaagelectronica1.app.n8n.cloud/webhook/Advice');
-
-        document.getElementById('msg').value = '';
-        document.getElementById('msg').disabled = false;
-        document.querySelector('#input-area button').disabled = false;
 
         agregarEscribiendo();
         setTimeout(() => {
           quitarEscribiendo();
           agregarMensaje("✏️ Escribe tu consulta de asesoramiento.");
+          document.getElementById('msg').disabled = false;
+          document.querySelector('#input-area button').disabled = false;
+          document.getElementById('msg').focus();
         },3000);
       }
     }
