@@ -261,8 +261,17 @@
           if (parsed?.RespuestaFinal) respuesta = parsed.RespuestaFinal;
         } catch {}
 
-        const html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>') +
-          `<br><br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`;
+        let html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+        if (webhook.includes('Asesoramiento')) {
+          html += `
+            <br><br>
+            <button class="opcion-btn" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button>
+            <a class="opcion-btn" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a>
+          `;
+        }
+
+        html += `<br><br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`;
         agregarMensaje(html);
       } catch {
         quitarEscribiendo();
@@ -287,7 +296,6 @@
       webhook = url;
       document.getElementById('msg').disabled = false;
       document.querySelector('#input-area button').disabled = false;
-      /*agregarMensaje("✅ Flujo iniciado. Escribe tu mensaje cuando gustes.");*/
     }
 
     function opcionSeleccionada(texto) {
@@ -320,14 +328,13 @@
         agregarEscribiendo();
         setTimeout(() => {
           quitarEscribiendo();
-          agregarMensaje("✏️ Escribe tu consulta de asesoramiento.");
+          agregarMensaje("✏️ Escribe tu consulta de asesoramiento.<br><br><button class='opcion-btn' onclick=\"opcionSeleccionada('🛒 Quiero comprar')\">🛒 Comprar</button> <a class='opcion-btn' href='https://api.whatsapp.com/send?phone=5215545554595' target='_blank'>🛠️ Soporte Técnico</a>");
           document.getElementById('msg').disabled = false;
           document.querySelector('#input-area button').disabled = false;
           document.getElementById('msg').focus();
-        },3000);
+        }, 3000);
       }
     }
-
 
     function opcionFinal(texto) {
       agregarMensaje(texto, 'user');
