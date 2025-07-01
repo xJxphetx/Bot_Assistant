@@ -263,7 +263,7 @@
 
         let html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
 
-        if (webhook.includes('Asesoramiento')) {
+        if (webhook.includes('Advice')) {
           html += `
             <br><br>
             <button class="opcion-btn" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button>
