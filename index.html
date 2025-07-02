@@ -374,7 +374,7 @@
 
         let html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
 
-        if (webhook.includes('Asesoramiento')) {
+        if (webhook.includes('Advice')) {
           html += `
             <br>
             <button class="opcion-btn-asesor" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button>
@@ -392,7 +392,7 @@
 
     function mostrarMensajeInicial() {
       agregarMensaje(`
-        <strong>Hola 👋, <span style="color:#0056b3">soy AG-ente Electrónica</span>, tu asistente virtual.</strong><br>
+        <strong>Hola 👋, soy <span style="color:#0056b3">AG-ente Electrónica</span>, tu asistente virtual.</strong><br>
         ¿En qué te puedo ayudar?<br><ul style="list-style: none; padding-left: 0;">
         <li><button class="opcion-btn" onclick="opcionSeleccionada('🔍 Quiero asesoramiento')">🔍 Asesoramiento</button></li>
         <li><button class="opcion-btn" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button></li>
