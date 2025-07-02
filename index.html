@@ -53,8 +53,40 @@
       flex-direction: column;
       scroll-behavior: smooth;
     }
+
+    .msg-wrapper {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      width: 100%;
+    }
+
+    .msg-wrapper.bot-wrapper {
+      flex-direction: row;
+    }
+
+    .msg-wrapper.user-wrapper {
+      flex-direction: row-reverse;
+    }
+
+    .msg-wrapper.bot-wrapper .avatar {
+      margin-right: 10px;
+      margin-left: 0;
+    }
+
+    .msg-wrapper.user-wrapper .avatar {
+      margin-left: 10px;
+      margin-right: 0;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
     .msg {
-      margin: 10px 0;
       padding: 12px 16px;
       border-radius: 18px;
       max-width: 75%;
@@ -63,6 +95,52 @@
       font-size: 15px;
       animation: fadeIn 0.3s ease-in;
     }
+
+    .msg.bot {
+      background: #eeeeee;
+      color: #333;
+      border-top-left-radius: 0;
+    }
+
+    .msg.user {
+      background: #cce5ff;
+      align-self: flex-end;
+      text-align: right;
+      border-top-right-radius: 0;
+      margin-left: auto;
+      max-width: 100%; 
+    }
+
+    .msg.bot {
+      position: relative;
+    }
+    .msg.bot::before {
+      content: "";
+      position: absolute;
+      left: -8px;
+      top: 12px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-right: 8px solid #eeeeee;
+      border-bottom: 8px solid transparent;
+    }
+
+    .msg.user {
+      position: relative;
+    }
+    .msg.user::before {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 12px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-left: 8px solid #cce5ff;
+      border-bottom: 8px solid transparent;
+    }
+
     .user {
       background: #cce5ff;
       align-self: flex-end;
@@ -132,7 +210,7 @@
     a { color: #007bff; text-decoration: underline; }
 
     .opcion-btn {
-      display: block;
+      display: inline-block;
       width: 100%;
       margin-bottom: 10px;
       padding: 12px 16px;
@@ -145,9 +223,30 @@
       font-weight: bold;
       text-align: left;
       transition: background-color 0.3s, transform 0.2s;
+      margin-top: 10px;
     }
 
     .opcion-btn:hover {
+      background-color: #0056b3;
+      transform: scale(1.02);
+    }
+
+    .opcion-btn-asesor {
+      display: inline-block;
+      width: auto;
+      padding: 8px 14px;
+      font-size: 13px;
+      background-color: #5296df;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .opcion-btn-asesor:hover {
       background-color: #0056b3;
       transform: scale(1.02);
     }
@@ -212,10 +311,22 @@
     })();
 
     function agregarMensaje(texto, clase = 'bot') {
-      const div = document.createElement('div');
-      div.className = `msg ${clase}`;
-      div.innerHTML = texto;
-      chat.appendChild(div);
+      const wrapper = document.createElement('div');
+      wrapper.className = `msg-wrapper ${clase}-wrapper`;
+
+      const avatar = document.createElement('img');
+      avatar.className = 'avatar';
+      avatar.src = clase === 'bot'
+        ? 'https://cdn-icons-png.flaticon.com/512/4712/4712109.png'  // avatar asistente
+        : 'https://cdn-icons-png.flaticon.com/512/1077/1077012.png'; // avatar usuario
+
+      const msg = document.createElement('div');
+      msg.className = `msg ${clase}`;
+      msg.innerHTML = texto;
+
+      wrapper.appendChild(avatar);
+      wrapper.appendChild(msg);
+      chat.appendChild(wrapper);
       chat.scrollTop = chat.scrollHeight;
     }
 
@@ -263,15 +374,15 @@
 
         let html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
 
-        if (webhook.includes('Advice')) {
+        if (webhook.includes('Asesoramiento')) {
           html += `
-            <br><br>
-            <button class="opcion-btn" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button>
-            <a class="opcion-btn" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a>
+            <br>
+            <button class="opcion-btn-asesor" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button>
+            <a class="opcion-btn-asesor" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a>
           `;
         }
 
-        html += `<br><br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`;
+        html += `<button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`;
         agregarMensaje(html);
       } catch {
         quitarEscribiendo();
@@ -281,7 +392,7 @@
 
     function mostrarMensajeInicial() {
       agregarMensaje(`
-        <strong>Hola 👋, soy tu asistente virtual de <span style="color:#0056b3">AG Electrónica</span></strong><br>
+        <strong>Hola 👋, <span style="color:#0056b3">soy AG-ente Electrónica</span>, tu asistente virtual.</strong><br>
         ¿En qué te puedo ayudar?<br><ul style="list-style: none; padding-left: 0;">
         <li><button class="opcion-btn" onclick="opcionSeleccionada('🔍 Quiero asesoramiento')">🔍 Asesoramiento</button></li>
         <li><button class="opcion-btn" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button></li>
@@ -328,7 +439,7 @@
         agregarEscribiendo();
         setTimeout(() => {
           quitarEscribiendo();
-          agregarMensaje("✏️ Escribe tu consulta de asesoramiento.<br><br><button class='opcion-btn' onclick=\"opcionSeleccionada('🛒 Quiero comprar')\">🛒 Comprar</button> <a class='opcion-btn' href='https://api.whatsapp.com/send?phone=5215545554595' target='_blank'>🛠️ Soporte Técnico</a>");
+          agregarMensaje("✏️ Escribe tu consulta de asesoramiento.<br><br><button class='opcion-btn-asesor' onclick=\"opcionSeleccionada('🛒 Quiero comprar')\">🛒 Comprar</button> <a class='opcion-btn-asesor' href='https://api.whatsapp.com/send?phone=5215545554595' target='_blank'>🛠️ Soporte Técnico</a>");
           document.getElementById('msg').disabled = false;
           document.querySelector('#input-area button').disabled = false;
           document.getElementById('msg').focus();
