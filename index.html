@@ -67,6 +67,7 @@
 
     .msg-wrapper.user-wrapper {
       flex-direction: row-reverse;
+      justify-content: flex-end;
     }
 
     .msg-wrapper.bot-wrapper .avatar {
@@ -104,11 +105,14 @@
 
     .msg.user {
       background: #cce5ff;
-      align-self: flex-end;
-      text-align: right;
+      text-align: left;
       border-top-right-radius: 0;
+      border-top-left-radius: 18px;
+      margin-right: 0;
       margin-left: auto;
-      max-width: 100%; 
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      width: auto;
+      max-width: 90%; 
     }
 
     .msg.bot {
@@ -288,7 +292,7 @@
   <div class="container">
     <div class="header">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9pJ85Zy6nLEQ8Xqs4KlR_vcKYNHUmEY1JUw&s" alt="Logo AG Electrónica" />
-      <h2>AG Electrónica</h2>
+      <h2>AG-ente Electrónica</h2>
     </div>
 
     <div id="chat"></div>
@@ -327,7 +331,7 @@
       wrapper.appendChild(avatar);
       wrapper.appendChild(msg);
       chat.appendChild(wrapper);
-      chat.scrollTop = chat.scrollHeight;
+      chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth'});
     }
 
     function agregarEscribiendo() {
@@ -392,7 +396,7 @@
 
     function mostrarMensajeInicial() {
       agregarMensaje(`
-        <strong>Hola 👋, soy <span style="color:#0056b3">AG-ente Electrónica</span>, tu asistente virtual.</strong><br>
+        <strong>Hola 👋, <span style="color:#0056b3">soy AG-ente Electrónica</span>, tu asistente virtual.</strong><br>
         ¿En qué te puedo ayudar?<br><ul style="list-style: none; padding-left: 0;">
         <li><button class="opcion-btn" onclick="opcionSeleccionada('🔍 Quiero asesoramiento')">🔍 Asesoramiento</button></li>
         <li><button class="opcion-btn" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button></li>
