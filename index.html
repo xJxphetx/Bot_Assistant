@@ -477,7 +477,7 @@
           'Drones y Refaccionamiento': '🚁 ¿Buscas un dron completo o piezas de refacción? Estoy aquí para ayudarte.'
         };
         const respuesta = respuestas[texto] || '✅ Selección registrada. ¿En qué más puedo ayudarte?';
-        /*agregarMensaje(`${respuesta}<br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`);*/
+        agregarMensaje(`${respuesta}`);
         document.getElementById('msg').disabled = false;
         document.querySelector('#input-area button').disabled = false;
       }, 3000);
