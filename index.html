@@ -292,7 +292,7 @@
   <div class="container">
     <div class="header">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9pJ85Zy6nLEQ8Xqs4KlR_vcKYNHUmEY1JUw&s" alt="Logo AG Electrónica" />
-      <h2>AG-ente Electrónica</h2>
+      <h2>AG Electrónica</h2>
     </div>
 
     <div id="chat"></div>
@@ -378,15 +378,23 @@
 
         let html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
 
-        if (webhook.includes('Advice')) {
+        html += `
+          <div style="margin-top: 16px;">
+            <strong>¿Te ha sido útil esta respuesta?</strong><br>
+            <button class="opcion-btn-asesor" onclick="simularRespuestaUsuario('👍 Sí', 'si')">👍 Sí</button>
+            <button class="opcion-btn-asesor" onclick="simularRespuestaUsuario('👎 No', 'no')">👎 No</button>
+          </div>
+        `;
+
+        /*if (webhook.includes('Advice')) {
           html += `
             <br>
-            <button class="opcion-btn-asesor" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button>
+            <button class="opcion-btn-asesor">
             <a class="opcion-btn-asesor" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a>
           `;
         }
 
-        html += `<button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`;
+        html += `<button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`;*/
         agregarMensaje(html);
       } catch {
         quitarEscribiendo();
@@ -396,7 +404,7 @@
 
     function mostrarMensajeInicial() {
       agregarMensaje(`
-        <strong>Hola 👋, <span style="color:#0056b3">soy AG-ente Electrónica</span>, tu asistente virtual.</strong><br>
+        <strong>Hola 👋, soy <span style="color:#0056b3">AG-ente Electrónica</span>, tu asistente virtual.</strong><br>
         ¿En qué te puedo ayudar?<br><ul style="list-style: none; padding-left: 0;">
         <li><button class="opcion-btn" onclick="opcionSeleccionada('🔍 Quiero asesoramiento')">🔍 Asesoramiento</button></li>
         <li><button class="opcion-btn" onclick="opcionSeleccionada('🛒 Quiero comprar')">🛒 Comprar</button></li>
@@ -443,7 +451,7 @@
         agregarEscribiendo();
         setTimeout(() => {
           quitarEscribiendo();
-          agregarMensaje("✏️ Escribe tu consulta de asesoramiento.<br><br><button class='opcion-btn-asesor' onclick=\"opcionSeleccionada('🛒 Quiero comprar')\">🛒 Comprar</button> <a class='opcion-btn-asesor' href='https://api.whatsapp.com/send?phone=5215545554595' target='_blank'>🛠️ Soporte Técnico</a>");
+          agregarMensaje("✏️ Escribe tu consulta de asesoramiento.");
           document.getElementById('msg').disabled = false;
           document.querySelector('#input-area button').disabled = false;
           document.getElementById('msg').focus();
@@ -469,11 +477,52 @@
           'Drones y Refaccionamiento': '🚁 ¿Buscas un dron completo o piezas de refacción? Estoy aquí para ayudarte.'
         };
         const respuesta = respuestas[texto] || '✅ Selección registrada. ¿En qué más puedo ayudarte?';
-        agregarMensaje(`${respuesta}<br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`);
+        /*agregarMensaje(`${respuesta}<br><button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`);*/
         document.getElementById('msg').disabled = false;
         document.querySelector('#input-area button').disabled = false;
       }, 3000);
     }
+
+    function retroalimentacion(valor){
+      agregarEscribiendo();
+      setTimeout(() => {
+        quitarEscribiendo();
+        if (valor === 'si') {
+          agregarMensaje(`
+            😊 ¡Gracias por tu retroalimentación!<br><br>
+            ¿Quieres hacer otra consulta?<br>
+            <button class="opcion-btn-asesor" onclick="simularRespuestaUsuario('👉 Sí', 'otra_si')">👉 Sí</button>
+            <button class="opcion-btn-asesor" onclick="simularRespuestaUsuario('❌ No', 'otra_no')">❌ No</button>
+        `);
+        } else if (valor === 'no') {
+          agregarMensaje(`
+            😟 Lo siento. ¿Quieres reformular tu pregunta o contactar a un asesor?<br><br>
+            <button class="opcion-btn-asesor" onclick="simularRespuestaUsuario('🔁 Reformular pregunta', 'otra_si')">🔁 Reformular pregunta</button>
+            <a class="opcion-btn-asesor" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Contactar asesor</a>
+          `);
+        } else if (valor === 'otra_si') {
+          reiniciarConversacion();
+        } else if (valor === 'otra_no') {
+          cerrarConversacion();
+        }
+      },3000);
+    }
+
+    /*function simularRespuestaUsuario(texto, valor) {
+      agregarMensaje(texto, 'user');
+      retroalimentacion(valor);
+
+      if (valor === 'si' || valor === 'no') {
+        fetch(webhook, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sessionId,
+            valor
+          })
+        }).then(() => console.log("✅ Satisfacción enviada:", valor));
+      }
+    }*/
 
     function reiniciarConversacion() {
       webhook = '';
@@ -482,6 +531,14 @@
       document.getElementById('msg').disabled = true;
       document.querySelector('#input-area button').disabled = true;
       mostrarMensajeInicial();
+    }
+
+    function cerrarConversacion() {
+      agregarMensaje('👋 ¡Hasta luego! Estoy aquí cuando me necesites.');
+      document.getElementById('msg').disabled = true;
+      document.querySelector('#input-area button').disabled = true;
+      const botones = document.querySelectorAll('.opcion-btn-asesor, .btn-volver, .opcion-btn');
+      botones.forEach(btn => btn.disabled = true);
     }
 
     window.onload = mostrarMensajeInicial;
