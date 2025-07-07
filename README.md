@@ -1,5 +1,4 @@
 # 🤖 AG Electrónica – Asistente Virtual
-<<<<<<< HEAD
 
 Bienvenido al repositorio del **Asistente Virtual de AG Electrónica**, una integración entre un frontend interactivo y flujos backend usando **n8n + OpenAI**.
 
