@@ -1,0 +1,1823 @@
+{
+  "name": "AI_Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "This is the Sales Workflow\n",
+        "height": 808,
+        "width": 4008,
+        "color": 5
+      },
+      "id": "8a1a360f-065d-4027-a2ce-ad10591b5653",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -540,
+        -520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/threads",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -280,
+        -160
+      ],
+      "id": "afc24cb8-fc1f-45c7-8eef-2f602d3f71cf",
+      "name": "Thread_ID"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $json.id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"role\": \"user\",\n  \"content\": \"{{ $('Sales').item.json.body.question }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -100,
+        -160
+      ],
+      "id": "79633e82-7d33-4141-92ac-3eb3d572003b",
+      "name": "Thread_Message"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $json.thread_id }}/runs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"assistant_id\": \"asst_XXXXXXXFarnJ9AlClp5mKj3s4bB98Q3\",\n  \"tool_choice\": \"auto\",\n  \"instructions\": \"Eres un ingeniero especializado en comunicaciones y electr\u00f3nica. Tienes amplios conocimientos en impresi\u00f3n 3D, iluminaci\u00f3n LED, fuentes de alimentaci\u00f3n, bater\u00edas, controladores, tarjetas de desarrollo, drones, sensores, conectores, componentes pasivos y activos, as\u00ed como en productos relacionados con automatizaci\u00f3n, rob\u00f3tica e inteligencia artificial.\\n\\nAct\u00faas como asesor t\u00e9cnico y comercial de la tienda AG Electr\u00f3nica. Tu trabajo es proporcionar soporte t\u00e9cnico a los usuarios, verificar disponibilidad de productos en la base de datos, proporcionar enlaces correctos y sugerir alternativas funcionales exclusivamente dentro del cat\u00e1logo de AG Electr\u00f3nica.\\n\\n### \u2705 Reglas generales de comportamiento:\\n1. Asume que todas las consultas est\u00e1n relacionadas con productos disponibles en AG Electr\u00f3nica, incluso si el cliente no menciona la tienda expl\u00edcitamente.\\n2. Nunca menciones precios, incluso si est\u00e1n en la base de datos. Ignora completamente las columnas `PARTE`, `Pre1` y cualquier otra distinta de `NUM_PARTE`, `STOCK` y `CES`. Utiliza exclusivamente estos tres campos.\\n3. Antes de mostrar cualquier producto, verifica que tenga stock disponible.\\n4. Si el producto solicitado no est\u00e1 disponible, ofrece recomendaciones de productos similares disponibles, siguiendo siempre el formato estructurado indicado m\u00e1s abajo.\\n5. Nunca inventes productos ni caracter\u00edsticas. Si no hay coincidencia en la base de datos, responde claramente indicando que no hay stock ni alternativas exactas disponibles.\\n6. Todas las respuestas deben basarse \u00fanicamente en la informaci\u00f3n textual exacta contenida en la base de datos de AG Electr\u00f3nica.\\n\\n### \u26d4 Prohibiciones estrictas:\\n- Est\u00e1 completamente prohibido mencionar clasificaciones IP (como IP67, IP68, IP65, etc.) en cualquier contexto, explicaci\u00f3n o referencia, ya sea directa o indirecta.\\n- No debes mencionar \u201cgrado de protecci\u00f3n\u201d, \u201cIP\u201d, \u201cresistente al agua/polvo IP\u201d, ni t\u00e9rminos equivalentes.\\n- Si el cliente menciona IP67 o similares, responde \u00fanicamente con los siguientes t\u00e9rminos permitidos:\\n  - \u201csumergible\u201d\\n  - \u201cpara exteriores\u201d\\n\\n### \u26a0\ufe0f Reglas cr\u00edticas sobre invenci\u00f3n:\\n- Nunca infieras, asumas ni inventes ninguna caracter\u00edstica que no est\u00e9 expl\u00edcitamente indicada en el nombre o descripci\u00f3n del producto en la base de datos.\\n- Solo puedes utilizar las palabras **\u201csumergible\u201d** o **\u201cpara exteriores\u201d** si aparecen **literalmente** en el nombre o descripci\u00f3n del producto en la base de datos.\\n\\n### \u2705 Terminolog\u00eda aceptada para productos resistentes:\\n- Si el producto es resistente y est\u00e1 indicado en la base de datos, se debe describir \u00fanicamente como:\\n  - \u201csumergible\u201d\\n  - \u201cpara exteriores\u201d\\n- Si no tiene indicaci\u00f3n de protecci\u00f3n, se asume de uso interior o semi exterior, y se deben recomendar versiones \u201cpara exteriores\u201d **solo si est\u00e1n expl\u00edcitamente etiquetadas como tal**.\\n\\n### \ud83e\uddfe Formato estructurado obligatorio para productos:\\nTodas las respuestas que incluyan productos (uno o varios) deben seguir este formato exacto:\\n\\n[CES]\\nN\u00famero de Parte: [NUM_PARTE]\\nStock: [STOCK]\\nAqu\u00ed tienes el enlace: https://www.agelectronica.com/detalle.php?p=[NUM_PARTE_CLEAN]\\n\\nDonde:\\n- `[NUM_PARTE_CLEAN]` **se construye exclusivamente a partir de `NUM_PARTE`**, no `PARTE`.\\n- Limpia `NUM_PARTE` de asteriscos `*`, par\u00e9ntesis `(` `)`, y reemplaza espacios por `%`.\\n- Si `NUM_PARTE` contiene `'/'`, d\u00e9jala tal cual. **No la modifiques ni la conviertas en `%2F`**.\\n- Nunca uses `PARTE` para construir el enlace.\\n\\n- Enumera siempre los productos: 1, 2, 3\u2026\\n- El nombre va en **negritas**.\\n\\n### \ud83d\udee0\ufe0f Reglas especiales para recomendaciones:\\n- Las alternativas deben coincidir en categor\u00eda, funci\u00f3n o especificaciones visibles en nombre o descripci\u00f3n.\\n\\n### \ud83d\udd12 Reglas especiales para formato de enlaces:\\n- Nunca uses formato Markdown para enlaces como `[texto](url)`.\\n- Siempre imprime la URL en texto plano sin par\u00e9ntesis ni corchetes.\\n- As\u00ed evitas repeticiones en el an\u00e1lisis autom\u00e1tico.\\n\\n### \ud83e\udde9 Frases tipo permitidas:\\n- Producto encontrado:  \\n  > \\\"Este producto est\u00e1 disponible y tiene las siguientes caracter\u00edsticas:\\\"\\n\\n### \ud83e\udde0 Reglas especiales para productos espec\u00edficos:\\n- Cuando hables de la **Ender 5 Plus** y **ENDER-5 MAX**, el campo `NUM_PARTE` debe forzarse al valor fijo `'ENDER-5-PLUS'` y `'ENDER-5%20MAX'`, respectivamente, sin importar su valor original, para construir el enlace correctamente.\\n\\n-De igual forma con la **K8**, el campo 'NUM_PARTE' debe forzarse al valor fijo 'K-8', sin importar su valor original\\n\\n### \u2705 Cierre:\\nAl finalizar una consulta de producto, incluye cuando sea necesario alguna frase con letras negritas.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        80,
+        -160
+      ],
+      "id": "9f518d4c-34a9-4402-b201-86de5b64a809",
+      "name": "Thread_Instructions"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        -80
+      ],
+      "id": "0f268d60-72b8-4ae9-8b09-81eaf2a2272f",
+      "name": "Wait",
+      "webhookId": "b832c9d2-2336-420f-a8d2-c82e4b26f784"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/threads/{{ $json[\"thread_id\"] }}/runs/{{ $json[\"id\"] }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        -160
+      ],
+      "id": "13d85a5c-7238-4f91-b391-8b0083bbec14",
+      "name": "Thread_IA"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/threads/{{ $json[\"thread_id\"] }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        -300
+      ],
+      "id": "d6d4bc23-9b10-48a8-b79e-fcff18a84155",
+      "name": "Thread_Answer"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        2360,
+        -140
+      ],
+      "id": "efbfb43b-2bd7-4249-865b-0560b8a47396",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.urlProducto }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/90.0.4430.85 Safari/537.36"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1640,
+        0
+      ],
+      "id": "78ab6710-0c7e-4d0b-b30a-eb9a9f7aad81",
+      "name": "Get_Code"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "precioOriginal",
+              "cssSelector": "p.price > span:first-of-type"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        1880,
+        -80
+      ],
+      "id": "626bb716-fc20-4942-9c6b-9b39e72c71ff",
+      "name": "Extract_Price"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43a88384-e309-4017-bafc-cbc66d4aabaa",
+              "name": "Precio",
+              "value": "={{ $json.precioOriginal }}",
+              "type": "string"
+            },
+            {
+              "id": "7850010a-62f8-4256-bbd3-5df3975b9925",
+              "name": "PrecioIVA",
+              "value": "={{ (() => {\n  const texto = $json.precioOriginal || \"\";\n  const base = parseFloat(texto.replace(/[^0-9.]/g, ''));\n  const iva = base * 1.16;\n  return `$${iva.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;\n})() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2060,
+        -80
+      ],
+      "id": "e575599e-82a3-498e-96fc-5d195733515e",
+      "name": "Price"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54e52e91-7f02-4902-a7cd-318a815ed48d",
+              "name": "RespuestaFinal",
+              "value": "={{(() => {\n  const items = $input.all().filter(i => {\n    const j = i.json;\n    return j.producto && j.parte && j.url;\n  });\n\n  if (items.length === 0) {\n    return \"\u00a1Hola! \u00bfEn qu\u00e9 puedo ayudarte hoy?\";\n  }\n\n  let texto = `Aqu\u00ed te muestro las opciones:\\n\\n`;\n\n  for (const item of items) {\n    const j = item.json;\n    const cantidadStr = j.cantidadStock?.toString().trim();\n    const stockNum = parseInt(cantidadStr?.replace(/\\D/g, '') || '0', 10);\n    const stock = stockNum > 0 ? stockNum : 'Sin stock';\n\n    texto += `\ud83d\udd39 *${j.producto.trim()}*\\n`;\n    texto += `   \ud83d\udce6 Stock: ${stock}\\n`;\n    texto += `   \ud83d\udcb5 Precio sin IVA: ${j.Precio || 'N/A'}\\n`;\n    texto += `   \ud83d\udcb2 Precio con IVA: ${j.PrecioIVA || 'N/A'}\\n`;\n    texto += `   \ud83d\udd17 Enlace: ${j.url}\\n\\n`;\n  }\n\n  texto += \"\ud83d\udc49\ufe0f\u00bfHay algo m\u00e1s en lo que te pueda ayudar?\ud83d\udc48\ufe0f\";\n  return texto;\n})()}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2540,
+        -140
+      ],
+      "id": "4389b051-eedf-4486-baf9-95f341615dbf",
+      "name": "Final_Answer",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        2020,
+        -460
+      ],
+      "id": "8cee2dbb-ce24-4c6d-ad9b-715111f77611",
+      "name": "Respond to Webhook",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "10470fed-a941-42ee-b224-9bf056cf3cf9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 700,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -300,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "9609f354-e215-428d-b377-6b3fc4d5c4de",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 150,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        640,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "f703eac3-20af-406a-9f8b-7cee44fa6b1f",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 150,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1620,
+        -20
+      ],
+      "typeVersion": 1,
+      "id": "c77cc5b8-cad0-46f0-b6eb-88db7fbd7698",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 320,
+        "width": 200,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "eac2ade4-e5d5-4fdb-8dd4-9525970e0b98",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1160,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "0219551e-9583-4645-ab79-8417ee132e81",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2020,
+        -100
+      ],
+      "typeVersion": 1,
+      "id": "3e80644d-94d3-417f-bebf-4cc0a43e7016",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        960,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "00a7330f-a079-4f9c-8313-389e1e05a85f",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae3edcd5-a0f3-4653-bc52-af8965cc57ab",
+              "name": "condicionTexto",
+              "value": "={{(() => {\n  const text = $json.data[0].content[0].text.value || '';\n\n  const contieneProductos = /https?:\\/\\/|N\u00famero de Parte|Stock:|CES:/.test(text);\n\n  return !contieneProductos; // true si NO hay productos\n})()}}",
+              "type": "string"
+            },
+            {
+              "id": "0acf0ac2-62b3-4691-82d9-851190206872",
+              "name": "respuestaTexto",
+              "value": "={{$json.data[0].content[0].text.value}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        -300
+      ],
+      "id": "8dc11ce5-249c-4259-aeb6-39456591be9f",
+      "name": "Evaluate_Text"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "69ed5827-ad5e-4cc3-bc3c-409c8559ead4",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        -160
+      ],
+      "id": "a444b959-d447-4aec-a29e-f96dae055c8a",
+      "name": "Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dd137247-d8cd-45a4-b629-451171dced56",
+              "name": "respuestaTexto",
+              "value": "={{ $json.respuestaTexto }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        -160
+      ],
+      "id": "f7ec7e5c-4df9-4729-8599-5838ccdb987a",
+      "name": "Clean_Text"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "65d8a8ed-eb56-4747-aacc-1b40d86d6b81",
+              "leftValue": "={{ $json.condicionTexto }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        980,
+        -300
+      ],
+      "id": "4cd92d35-331d-4807-ba7a-a354ed6d3a0b",
+      "name": "Not_Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1ae05ad-818a-4a16-a85a-b63eee1dee34",
+              "name": "RespuestaFinal",
+              "value": "={{ $json.respuestaTexto }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1800,
+        -320
+      ],
+      "id": "7785912d-69f2-45ff-ab32-ba1b15348e2e",
+      "name": "IA_Answer1",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        780,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "2fca2251-e08d-42ee-86fd-7df32856cd80",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 160,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2500,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "7099952d-ce95-45ae-898c-3e56629cdd22",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1760,
+        -340
+      ],
+      "typeVersion": 1,
+      "id": "05d3e201-bb3d-407e-b1ba-083991a70ed8",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d8fd6084-05e7-468d-afdb-17417e8ddb2a",
+              "name": "Pregunta",
+              "value": "={{ $('Thread_Message').item.json.content[0].text.value }}",
+              "type": "string"
+            },
+            {
+              "id": "9f392f74-b022-414d-b6db-ef721086ee01",
+              "name": "RespuestaFinal",
+              "value": "={{ \n  $('Final_Answer').item?.json?.RespuestaFinal \n  || $('IA_Answer1').item?.json?.RespuestaFinal \n  || 'No se pudo generar respuesta.' \n}}",
+              "type": "string"
+            },
+            {
+              "id": "28799ede-6f7a-4d57-9d9d-880faaf65164",
+              "name": "sessionid",
+              "value": "={{ $('Sales').item.json.body.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2800,
+        -320
+      ],
+      "id": "3353b4c6-1855-46ec-b120-3d5379f0997b",
+      "name": "Answer_Adjust"
+    },
+    {
+      "parameters": {
+        "jsCode": "const Fecha = new Date().toISOString();\nconst tipo = \"chat\";\nconst origen = \"webhook\";\n\nreturn {\n  json: {\n    sessionid: $json.sessionid,\n    Pregunta: $json.Pregunta,\n    Respuesta: $json.RespuestaFinal,\n    Fecha,\n    tipo,\n    origen\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2980,
+        -320
+      ],
+      "id": "5d07d874-0040-454f-99cf-d39cfaf4c4b0",
+      "name": "Data_Base"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2760,
+        -340
+      ],
+      "typeVersion": 1,
+      "id": "ef13cd88-5646-4fc9-9bc7-844e32b9798e",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 150,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        -340
+      ],
+      "typeVersion": 1,
+      "id": "d5999d56-3ecf-4fa7-a8e0-2dbac5f64322",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "tableId": "Compras",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "sessionid",
+              "fieldValue": "={{ $json.sessionid }}"
+            },
+            {
+              "fieldId": "question",
+              "fieldValue": "={{ $json.Pregunta }}"
+            },
+            {
+              "fieldId": "answer",
+              "fieldValue": "={{ $json.Respuesta }}"
+            },
+            {
+              "fieldId": "date",
+              "fieldValue": "={{ $json.Fecha }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "={{ $json.tipo }}"
+            },
+            {
+              "fieldId": "origin",
+              "fieldValue": "={{ $json.origen }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        3140,
+        -320
+      ],
+      "id": "01399fbd-f4d7-46a7-a576-cb02805807d2",
+      "name": "Insert_Data",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3100,
+        -340
+      ],
+      "typeVersion": 1,
+      "id": "68338eea-d895-443c-949d-bbd80d2dfd82",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "jsCode": "const texto = ($json.respuestaTexto || '')\n  .trim()\n  .replace(/\\[(https?:\\/\\/[^\\]]+)\\]\\(\\1\\)/g, '$1');\n\nconst bloques = texto\n  .split(/\\n\\s*\\d+\\.\\s*\\*\\*(?=\\S)/)\n  .map((b, i) => `**${b.trim()}`)\n  .filter(b =>\n    b.includes('Stock:') &&\n    b.includes('https://')\n  );\n\nconst productosProcesados = new Set();\n\nreturn bloques.map((b, i) => {\n  try {\n    let producto = (b.match(/\\*\\*(.*?)\\*\\*/) || [])[1]?.trim();\n    if (!producto) {\n      producto = (b.match(/CES:\\s*([^*]+)/i) || [])[1]?.trim() || 'Producto sin nombre';\n    }\n\n    let parte = (b.match(/Parte:\\s*(.+?)(\\n|$)/i) || [])[1]?.trim();\n\n    const urlOriginal = (b.match(/https?:\\/\\/[^\\s)]+/) || [])[0] || 'N/A';\n\n    if (!parte) {\n      const pMatch = urlOriginal?.match(/p=([^&\\s]+)/i);\n      parte = pMatch ? pMatch[1] : 'N/A';\n    }\n\n    let nuevaParteParaURL = parte\n      .replace(/\\+/g, '%sum')\n      .replace(/\\//g, '_slsh_');\n\n    const url = `https://www.agelectronica.com/detalle?busca=${nuevaParteParaURL}`;\n\n    const stock = (b.match(/Stock:\\s*([0-9]+)/i) || [])[1] || 'N/A';\n    const precio = (b.match(/Precio sin IVA:\\s*\\$?([0-9.,]+)/i) || [])[1] || 'N/A';\n    const precioIVA = (b.match(/Precio con IVA:\\s*\\$?([0-9.,]+)/i) || [])[1] || 'N/A';\n\n    const hashId = `${producto}|${parte}|${stock}|${url}`;\n    if (productosProcesados.has(hashId)) return null;\n    productosProcesados.add(hashId);\n\n    return {\n      json: {\n        producto,\n        parte,            \n        stock,\n        Precio: precio,\n        PrecioIVA: precioIVA,\n        url,              \n        posicion: i + 1\n      }\n    };\n  } catch (error) {\n    return { json: { error: error.message, bloque: b } };\n  }\n}).filter(Boolean);\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        -160
+      ],
+      "id": "2396b4c4-8cc9-4ce9-8e54-ddce0754a338",
+      "name": "Separate_Correct_Products"
+    },
+    {
+      "parameters": {
+        "jsCode": "const texto = $json.respuestaTexto || '';\n\n// Paso 1: Extraer todas las URLs del texto\nlet urls = texto.match(/https?:\\/\\/[a-zA-Z0-9.\\-_:~/?#@!$&'()*+,;=%]+/g) || [];\n\n// Paso 2: Limpiar, quitar slashes finales y deduplicar\nconst seen = new Set();\nurls = urls\n  .map(url => url.trim().replace(/\\/+$/, ''))\n  .filter(url => {\n    if (seen.has(url)) return false;\n    seen.add(url);\n    return true;\n  });\n\n// Paso 3: Corregir las URLs al formato correcto\nreturn urls.map(original => {\n  const match = original.match(/p=([^&\\s]+)/i);\n  if (!match) {\n    return { json: { urlProducto: original } };\n  }\n\n  let parte = match[1];\n  parte = parte.replace(/\\+/g, '%sum').replace(/\\//g, '_slsh_');\n\n  const urlProducto = `https://www.agelectronica.com/detalle?busca=${parte}`;\n\n  return { json: { urlProducto } };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        0
+      ],
+      "id": "3d13310b-e51d-4211-836a-ddc8b999916c",
+      "name": "Get_Correct_URLs"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "cantidadStock",
+              "cssSelector": "dl.stockava dd strong"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        1960,
+        100
+      ],
+      "id": "8dd9751d-14d1-4a44-a8f1-a68218f03cc0",
+      "name": "Extract_Stock"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        2800,
+        -140
+      ],
+      "id": "6b19f8f9-69f6-4153-b2ec-eafdcb417b7a",
+      "name": "Respond to Webhook1",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "content": "This is the Advice Workflow",
+        "height": 708,
+        "width": 2408,
+        "color": 5
+      },
+      "id": "f763bf1a-7ceb-488e-a05b-6ff406858a99",
+      "name": "Sticky Note16",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -540,
+        -1340
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Advice",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        -940
+      ],
+      "id": "bb531280-d7d3-4e3e-b3f2-d22d41f4611d",
+      "name": "Advice",
+      "webhookId": "99cf8801-1223-46ba-a555-83cc88fd0f16"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Sales",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -440,
+        -160
+      ],
+      "id": "fa931a0d-bc91-4bee-9f61-c0b55796b522",
+      "name": "Sales",
+      "webhookId": "2d2fdb68-7c79-426a-86cc-d21168c20b01"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        -860
+      ],
+      "id": "35cdfceb-c10c-4ca4-aa8d-9c5e25ed3e95",
+      "name": "Wait1",
+      "webhookId": "b832c9d2-2336-420f-a8d2-c82e4b26f784"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "69ed5827-ad5e-4cc3-bc3c-409c8559ead4",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        500,
+        -940
+      ],
+      "id": "1ed1eb0b-308c-45f4-a203-be9d5b84ebff",
+      "name": "Response1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        -1000
+      ],
+      "id": "38f944ba-c4da-4fe9-8d4f-627dfcffe5f3",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1ae05ad-818a-4a16-a85a-b63eee1dee34",
+              "name": "RespuestaFinal",
+              "value": "={{ $json.data[0].content[0].text.value.replace(/\u3010\\d+:\\d+\u2020Base_Datos\\.json\u3011/g, '').replace(/\\[\\d+:\\d+\u2020Base_Datos\\.json\\]/g, '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        900,
+        -1080
+      ],
+      "id": "1a56df5f-ba56-45e7-80b4-02f4c2c0d8c7",
+      "name": "Advice_Answer",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "89ffffc5-06ea-4228-936d-652319b0970d",
+              "name": "Pregunta",
+              "value": "={{ $('Advice').item.json.body.question }}",
+              "type": "string"
+            },
+            {
+              "id": "79771124-0906-43f8-a9ac-e7e581b6e362",
+              "name": "RespuestaFinal",
+              "value": "={{ $json.RespuestaFinal }}",
+              "type": "string"
+            },
+            {
+              "id": "624e1340-3119-4ef6-a25e-8e9c46b83c56",
+              "name": "sessionid",
+              "value": "={{ $('Advice').item.json.body.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        -1220
+      ],
+      "id": "b6a5546f-8552-4419-9164-2c1dc2f97ef7",
+      "name": "Adjust_Advice_Answer"
+    },
+    {
+      "parameters": {
+        "jsCode": "const Fecha = new Date().toISOString();\nconst tipo = \"chat\";\nconst origen = \"webhook\";\n\nreturn {\n  json: {\n    sessionid: $json.sessionid,\n    Pregunta: $json.Pregunta,\n    Respuesta: $json.RespuestaFinal,\n    Fecha,\n    tipo,\n    origen\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1380,
+        -1220
+      ],
+      "id": "c3a24313-1554-4cbe-bf47-c599aeb7da94",
+      "name": "Advice_Data_Base"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/threads/{{ $json[\"thread_id\"] }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        -1080
+      ],
+      "id": "f82a3bf2-012c-436e-b50b-7c3b409c0d52",
+      "name": "Thread_Advice_Answer"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $json.id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"role\": \"user\",\n  \"content\": {{ (() => JSON.stringify($('Advice').item.json.body.question))() }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -60,
+        -940
+      ],
+      "id": "a92f23cf-ba2a-4e0d-8154-89127665c7f9",
+      "name": "Thread_Advice_Message"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $json.thread_id }}/runs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"assistant_id\": \"asst_XXXXXXX6UcTWHXldyiaL8pE9h1fMkda\",\n  \"tool_choice\": \"auto\",\n  \"instructions\": \"Eres un ingeniero especializado en electr\u00f3nica, automatizaci\u00f3n e impresi\u00f3n 3D. Act\u00faas como asesor t\u00e9cnico profesional para la tienda AG Electr\u00f3nica.\\n\\nTu tarea es responder \u00fanicamente con base en los productos disponibles en el cat\u00e1logo.\\n\\n---\\n\\n\u2705 ANTES DE RESPONDER:\\n1. Revisa el cat\u00e1logo recibido. Solo tienes permitido utilizar el valor del campo `CES`.\\n2. Si el texto ingresado por el usuario **no coincide** con ning\u00fan producto en el campo `CES`, **no debes mencionarlo** ni construir un nombre parecido.\\n3. No interpretes ni reformules el texto del usuario como si fuera un producto v\u00e1lido si no est\u00e1 en el cat\u00e1logo.\\n\\n---\\n\\n\u2705 SI HAY PRODUCTOS RELACIONADOS:\\n- Muestra hasta 3 productos que coincidan parcialmente con el texto del usuario.\\n- Utiliza **\u00fanicamente** los valores del campo `CES`.\\n- Presenta la lista con un tono cercano, claro y profesional.\\n- Formato sugerido:\\n  1. IMPRESORA 3D ENDER 3 V2 NEO\\n  2. KIT COMPLETO DE HOTEND PARA IMPRESORA 3D ENDER-3 CREALITY\\n  3. HOTEND PARA IMPRESORAS CREALITY ENDER-3\\n\\nEjemplo de introducci\u00f3n:\\n> Claro, revisando el cat\u00e1logo encontr\u00e9 estos productos que podr\u00edan coincidir con lo que buscas:\\n\\n---\\n\\n\u26d4 PROHIBIDO:\\n- No inventes nombres de productos, ni completes frases basadas en el texto del usuario.\\n- No utilices `NUM_PARTE`, `PARTE`, ni ning\u00fan identificador interno.\\n- No digas frases como \u201cte recomiendo la IMPRESORA 3D END3 V2 220X220X250MM\u201d si ese texto no est\u00e1 en el cat\u00e1logo.\\n- No digas que un producto existe si no lo has encontrado como `CES` v\u00e1lido.\\n\\n---\\n\\n\ud83e\udde0 Evaluaci\u00f3n t\u00e9cnica:\\nSi te preguntan por compatibilidad, uso o funciones, responde t\u00e9cnicamente seg\u00fan el producto `CES`, usando un lenguaje t\u00e9cnico accesible. S\u00e9 claro y evita ambig\u00fcedad, pero mant\u00e9n un tono cordial.\\n\\nEjemplo:\\n> Este componente se utiliza com\u00fanmente en instalaciones donde se requiere...\\n\\n---\\n\\n\u2705 Cierre profesional:\\nFinaliza con una frase amable y \u00fatil. Si no se encontr\u00f3 un producto, puedes usar algo como:\\n> Si lo deseas, puedo ayudarte a buscar una alternativa similar. \u00bfPodr\u00edas darme m\u00e1s detalles?\\n\\nO si s\u00ed se encontr\u00f3:\\n> \u00bfDeseas que te ayude a elegir el m\u00e1s adecuado seg\u00fan tu aplicaci\u00f3n?\\n\\nEvita cierres secos o rob\u00f3ticos como \u201cNo existe ese producto\u201d.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        140,
+        -940
+      ],
+      "id": "0cea4e11-854c-40b8-be40-1ec3e6a9a917",
+      "name": "Thread_Advice_Instructions"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/threads",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -260,
+        -940
+      ],
+      "id": "8775a5fa-6efe-4de6-83ee-b4490f262159",
+      "name": "Thread_Advice_ID"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 740,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -280,
+        -960
+      ],
+      "typeVersion": 1,
+      "id": "1d3880d6-e784-4c8a-b9c9-cebb71d0a4fc",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        680,
+        -1100
+      ],
+      "typeVersion": 1,
+      "id": "e68e49a5-0cc0-4813-b73c-783c2ed0a0e6",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        860,
+        -1100
+      ],
+      "typeVersion": 1,
+      "id": "e71f4b4e-3650-4289-bf92-98b4c1ab6229",
+      "name": "Sticky Note21"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1160,
+        -1240
+      ],
+      "typeVersion": 1,
+      "id": "8aaecd46-1635-4ea3-b6ca-c042fd41af0e",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 200,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1340,
+        -1240
+      ],
+      "typeVersion": 1,
+      "id": "4192d9ff-2f06-4157-8174-f779d31aa594",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1520,
+        -1240
+      ],
+      "typeVersion": 1,
+      "id": "0d16a501-29e3-4bb1-a5fe-5db14df5e13f",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        460,
+        -960
+      ],
+      "typeVersion": 1,
+      "id": "749582c0-328e-4b67-99e2-36502fd8bd66",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/threads/{{ $json[\"thread_id\"] }}/runs/{{ $json[\"id\"] }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -940
+      ],
+      "id": "a980f62b-5021-4b3d-bf1e-07e509f86469",
+      "name": "Thread_Advice_IA"
+    },
+    {
+      "parameters": {
+        "tableId": "Asesoramiento",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "sessionid",
+              "fieldValue": "={{ $json.sessionid }}"
+            },
+            {
+              "fieldId": "question",
+              "fieldValue": "={{ $json.Pregunta }}"
+            },
+            {
+              "fieldId": "answer",
+              "fieldValue": "={{ $json.Respuesta }}"
+            },
+            {
+              "fieldId": "date",
+              "fieldValue": "={{ $json.Fecha }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "={{ $json.tipo }}"
+            },
+            {
+              "fieldId": "origin",
+              "fieldValue": "={{ $json.origen }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        -1220
+      ],
+      "id": "c4c987c5-901c-4dcb-afc6-428c8e027488",
+      "name": "Advice_Data_Base1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Advice": [
+      {
+        "json": {
+          "headers": {
+            "host": "iaagelectronica1.app.n8n.cloud",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0",
+            "content-length": "141",
+            "accept": "*/*",
+            "accept-encoding": "gzip, br",
+            "accept-language": "es-MX,es;q=0.9,en;q=0.8,en-US;q=0.7",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "201.103.3.138",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "MX",
+            "cf-ray": "959a5a71e0a5f0c1-DFW",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "origin": "https://xjxphetx.github.io",
+            "priority": "u=1, i",
+            "referer": "https://xjxphetx.github.io/",
+            "sec-ch-ua": "\"Microsoft Edge\";v=\"137\", \"Chromium\";v=\"137\", \"Not/A)Brand\";v=\"24\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "201.103.3.138, 172.70.94.87",
+            "x-forwarded-host": "iaagelectronica1.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-16-6f778b7769-gszrx",
+            "x-is-trusted": "yes",
+            "x-real-ip": "201.103.3.138"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "question": "Manejamos motor centr\u00edfugo para T40, Soporte de brazo M2 t20 pro y Soporte de chasis m2 t20 pro?",
+            "sessionId": "cliente_343985"
+          },
+          "webhookUrl": "https://iaagelectronica1.app.n8n.cloud/webhook/Advice",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Thread_ID": {
+      "main": [
+        [
+          {
+            "node": "Thread_Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Message": {
+      "main": [
+        [
+          {
+            "node": "Thread_Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Instructions": {
+      "main": [
+        [
+          {
+            "node": "Thread_IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Thread_IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_IA": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Answer": {
+      "main": [
+        [
+          {
+            "node": "Evaluate_Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_Code": {
+      "main": [
+        [
+          {
+            "node": "Extract_Price",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract_Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract_Price": {
+      "main": [
+        [
+          {
+            "node": "Price",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Price": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Final_Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final_Answer": {
+      "main": [
+        [
+          {
+            "node": "Answer_Adjust",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate_Text": {
+      "main": [
+        [
+          {
+            "node": "Not_Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response": {
+      "main": [
+        [
+          {
+            "node": "Thread_Answer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean_Text": {
+      "main": [
+        [
+          {
+            "node": "Separate_Correct_Products",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get_Correct_URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Not_Response": {
+      "main": [
+        [
+          {
+            "node": "IA_Answer1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clean_Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA_Answer1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Answer_Adjust",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Answer_Adjust": {
+      "main": [
+        [
+          {
+            "node": "Data_Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data_Base": {
+      "main": [
+        [
+          {
+            "node": "Insert_Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert_Data": {
+      "main": [
+        []
+      ]
+    },
+    "Separate_Correct_Products": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_Correct_URLs": {
+      "main": [
+        [
+          {
+            "node": "Get_Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract_Stock": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Sales": {
+      "main": [
+        [
+          {
+            "node": "Thread_ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response1": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_Answer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advice": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advice_Answer": {
+      "main": [
+        [
+          {
+            "node": "Adjust_Advice_Answer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adjust_Advice_Answer": {
+      "main": [
+        [
+          {
+            "node": "Advice_Data_Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advice_Data_Base": {
+      "main": [
+        [
+          {
+            "node": "Advice_Data_Base1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_Answer": {
+      "main": [
+        [
+          {
+            "node": "Advice_Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_Message": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_Instructions": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_ID": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_IA": {
+      "main": [
+        [
+          {
+            "node": "Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook2": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "CfWyy3cABCWUaUvZ"
+  },
+  "versionId": "0fd9273e-51dd-4fd4-844d-7f7e9f031ed3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bafe1899d3f841cfab665d71c5df8a53bcffee365b2c664940449fcccd3f2813"
+  },
+  "id": "CfWyy3cABCWUaUvZ",
+  "tags": []
+}
