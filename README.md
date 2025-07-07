@@ -52,9 +52,9 @@ Bot_Assistant/
 
 ## 📝 Documentación
 
--  [Flujo n8n AI Assistant](/workspaces/Bot_Assistant/docs/flujo-n8n-ai-assistant.md)
--  [Frontend del asistente](/workspaces/Bot_Assistant/docs/frontend-assistant.md)
--  [JSON del flujo](/workspaces/Bot_Assistant/n8n-flujos/AI_Assistant.json)
+-  [Flujo n8n AI Assistant](./docs/flujo-n8n-ai-assistant.md)
+-  [Frontend del asistente](./docs/frontend-assistant.md)
+-  [JSON del flujo](./n8n-flujos/AI_Assistant.json)
 
 ---
 
