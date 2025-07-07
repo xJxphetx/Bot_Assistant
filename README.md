@@ -54,7 +54,7 @@ Bot_Assistant/
 
 -  [Flujo n8n AI Assistant](./docs/flujo-n8n-ai-assistant.md)
 -  [Frontend del asistente](./docs/frontend-assistant.md)
--  [JSON del flujo (seguro)](./n8n-flujos/AI_Assistant_sanitized.json)
+-  [JSON del flujo](./n8n-flujos/AI_Assistant.json)
 
 ---
 
