@@ -6,7 +6,7 @@ Bienvenido al repositorio del **Asistente Virtual de AG Electrónica**, una inte
 
 ##  Demo
 
-![Chatbot en acción]
+![Chatbot en acción](https://user-images.githubusercontent.com/demo-placeholder.gif)
 ![image](https://github.com/user-attachments/assets/8cbf0a13-4d3c-41b2-b955-2395bbf22540)
 
 > Interfaz tipo chat 100% responsive para ayudar a tus clientes en tiempo real.
