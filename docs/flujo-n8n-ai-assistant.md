@@ -1,12 +1,12 @@
 # 🤖 AI Assistant – Flujo n8n para AG Electrónica
 
-## 🎯 Objetivo del flujo
+## Objetivo del flujo
 
 Este workflow proporciona respuestas automáticas a consultas de usuarios mediante un frontend web (chat). El flujo se comunica con OpenAI (Assistant API) y estructura las respuestas según reglas del catálogo de AG Electrónica.
 
 ---
 
-## 🌐 Webhooks del flujo
+## Webhooks del flujo
 
 | Webhook        | Ruta n8n                             | Descripción                             |
 |----------------|--------------------------------------|-----------------------------------------|
@@ -15,7 +15,7 @@ Este workflow proporciona respuestas automáticas a consultas de usuarios median
 
 ---
 
-## 🔄 Flujo general (Ventas)
+## Flujo general (Ventas)
 
 ```text
 Frontend → Webhook (/Sales) 
@@ -31,7 +31,7 @@ Frontend → Webhook (/Sales)
 
 ---
 
-## 🔁 Flujo general (Asesoramiento)
+## Flujo general (Asesoramiento)
 
 ```text
 Frontend → Webhook (/Advice)
@@ -44,7 +44,7 @@ Frontend → Webhook (/Advice)
 
 ---
 
-## 📌 Nodos importantes
+## Nodos importantes
 
 | Nodo                 | Descripción                                               |
 |----------------------|-----------------------------------------------------------|
@@ -61,7 +61,7 @@ Frontend → Webhook (/Advice)
 
 ---
 
-## 🧠 Reglas y validaciones del flujo
+##  Reglas y validaciones del flujo
 
 - Solo se muestran productos si tienen stock (`cantidadStock` extraído del HTML).
 - Se extraen precios con y sin IVA.
@@ -71,7 +71,7 @@ Frontend → Webhook (/Advice)
 
 ---
 
-## 🧾 Datos guardados en Supabase
+## Datos guardados en Supabase
 
 | Campo        | Valor                                        |
 |--------------|----------------------------------------------|
@@ -84,7 +84,7 @@ Frontend → Webhook (/Advice)
 
 ---
 
-## 🔗 Cómo se conecta con el frontend
+## Cómo se conecta con el frontend
 
 En el HTML del frontend (chat), el botón de compra llama:
 
@@ -97,14 +97,14 @@ fetch('https://iaagelectronica1.app.n8n.cloud/webhook-test/Sales', {
 
 ---
 
-## 📂 Archivos adicionales
+## Archivos adicionales
 
 - [📄 JSON del flujo completo](./n8n-flujos/AI_Assistant.json)
 - Puedes importar este archivo en n8n usando "Import workflow".
 
 ---
 
-## 👤 Autor
+## Autor
 
-- **Desarrollador:** Tú 😎
+- **Desarrollador:** xJxphetx
 - **Última modificación:** 7 de julio de 2025
