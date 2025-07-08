@@ -66,11 +66,10 @@ fetch(webhook, {
 
 - `index.html` – Este archivo
 - [📄 flujo-n8n-ai-assistant.md](./flujo-n8n-ai-assistant.md)
-- [📄 AI_Assistant_sanitized.json](../n8n-flujos/AI_Assistant_sanitized.json)
+- [📄 AI_Assistant.json](../n8n-flujos/AI_Assistant.json)
 
 ---
 
 ##  Autor
 
-- Desarrollador: xJxphetx
-- Última edición: 7 de julio de 2025
+- Desarrollador: **@xJxphetx** - Julio de 2025
