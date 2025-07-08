@@ -106,5 +106,4 @@ fetch('https://iaagelectronica1.app.n8n.cloud/webhook-test/Sales', {
 
 ## Autor
 
-- **Desarrollador:** xJxphetx
-- **Última modificación:** 7 de julio de 2025
+- **Desarrollador:** **@xJxphetx** - Julio de 2025
