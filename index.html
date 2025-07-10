@@ -416,10 +416,11 @@
 
     function seleccionarFlujo(url) {
       webhook = url;
-      flujoActivo = url.includes("Advice" || "Sales);
+      localStorage.setItem("chat_origin", url.includes("Advice") ? "Advice" : "Sales");
       document.getElementById('msg').disabled = false;
       document.querySelector('#input-area button').disabled = false;
     }
+
 
     function opcionSeleccionada(texto) {
       agregarMensaje(texto, 'user');
@@ -508,24 +509,21 @@
       },3000);
     }
 
-    const satisfactionWebhook = "https://iaagelectronica1.app.n8n.cloud/webhook/satisfaction";
-
     function simularRespuestaUsuario(texto, valor) {
       agregarMensaje(texto, 'user');
       retroalimentacion(valor);
-
+    
       if (valor === 'si' || valor === 'no') {
-        fetch(satisfactionWebhook, {
+        fetch("https://iaagelectronica1.app.n8n.cloud/webhook-test/satisfaccion", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             sessionId,
             valor,
-            origin: flujoActivo || 'Desconocido', 
-            //date: new Date().toISOString()
+            origin: localStorage.getItem("chat_origin") || "desconocido",
+            date: new Date().toISOString()
           })
-        }).then(() => console.log("✅ Satisfacción enviada:", valor))
-          .catch(err => console.error("❌ Error al enviar satisfacción:", err));
+        }).then(() => console.log("✅ Satisfacción enviada:", valor));
       }
     }
 
