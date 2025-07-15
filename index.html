@@ -354,16 +354,16 @@
     let mensajeAcumulado = '';
     let temporizadorEnvio = null;
 
-    async function enviar() {
+    function enviar() {
       const input = document.getElementById('msg');
       const texto = input.value.trim();
       if (!texto || !webhook) return;
 
       mensajeAcumulado += (mensajeAcumulado ? ' ' : '') + texto;
-      agregarMensaje(escapeHTML(texto)), 'user');
+      agregarMensaje(escapeHTML(texto), 'user');
       input.value = '';
 
-      if(temporizadorEnvio){
+      if (temporizadorEnvio) {
         clearTimeout(temporizadorEnvio);
         quitarEscribiendo();
       }
