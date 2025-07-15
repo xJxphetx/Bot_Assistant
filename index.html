@@ -351,20 +351,41 @@
       })[match]);
     }
 
+    let mensajeAcumulado = '';
+    let temporizadorEnvio = null;
+
     async function enviar() {
       const input = document.getElementById('msg');
-      const pregunta = input.value.trim();
-      if (!pregunta || !webhook) return;
+      const texto = input.value.trim();
+      if (!texto || !webhook) return;
 
-      agregarMensaje(escapeHTML(pregunta), 'user');
+      mensajeAcumulado += (mensajeAcumulado ? ' ' : '') + texto;
+      agregarMensaje(escapeHTML(texto)), 'user');
       input.value = '';
+
+      if(temporizadorEnvio){
+        clearTimeout(temporizadorEnvio);
+        quitarEscribiendo();
+      }
+
+      agregarEscribiendo();
+
+      temporizadorEnvio = setTimeout(() => {
+        enviarAcumulado();
+      }, 5000);
+    }
+
+    async function enviarAcumulado() {
+      quitarEscribiendo();
+      if (!mensajeAcumulado || !webhook) return;
+
       agregarEscribiendo();
 
       try {
         const res = await fetch(webhook, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: pregunta, sessionId })
+          body: JSON.stringify({ question: mensajeAcumulado, sessionId })
         });
 
         quitarEscribiendo();
@@ -376,7 +397,6 @@
         } catch {}
 
         let html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
-
         html += `
           <div style="margin-top: 16px;">
             <strong>¿Te ha sido útil esta respuesta?</strong><br>
@@ -385,19 +405,13 @@
           </div>
         `;
 
-        /*if (webhook.includes('Advice')) {
-          html += `
-            <br>
-            <button class="opcion-btn-asesor">
-            <a class="opcion-btn-asesor" href="https://api.whatsapp.com/send?phone=5215545554595" target="_blank">🛠️ Soporte Técnico</a>
-          `;
-        }
-
-        html += `<button class="btn-volver" onclick="reiniciarConversacion()">🔁 Volver al menú principal</button>`;*/
         agregarMensaje(html);
       } catch {
         quitarEscribiendo();
         agregarMensaje('❌ Error al conectar con el servidor');
+      } finally {
+        mensajeAcumulado = '';
+        temporizadorEnvio = null;
       }
     }
 
