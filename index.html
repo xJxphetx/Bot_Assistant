@@ -280,6 +280,39 @@
       #msg { font-size: 14px; }
     }
 
+    .file-upload {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 6px;
+      margin-right: 8px;
+      border-radius: 6px;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .clip-container:hover .clip-image {
+      transform: scale(1.15);
+      filter: brightness(1.2);
+    }
+
+    .clip-image {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
     #input-area {
       position: fixed;
       bottom: 0;
