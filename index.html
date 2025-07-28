@@ -23,7 +23,7 @@
       flex-direction: column;
       width: 100%;
       max-width: 700px;
-      height: 100dvh;
+      height: 100vh;
       background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
@@ -48,6 +48,7 @@
       flex: 1;
       overflow-y: auto;
       padding: 20px;
+      padding-bottom: 120px;
       background-color: #f9f9f9;
       display: flex;
       flex-direction: column;
@@ -155,12 +156,6 @@
       align-self: flex-start;
       color: #333;
       border-top-left-radius: 0;
-    }
-    #input-area {
-      display: flex;
-      padding: 15px 20px;
-      border-top: 1px solid #ddd;
-      background-color: #f0f0f0;
     }
     #msg {
       flex: 1;
@@ -284,6 +279,137 @@
       button { font-size: 14px; }
       #msg { font-size: 14px; }
     }
+
+    .file-upload {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 6px;
+      margin-right: 8px;
+      border-radius: 6px;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .clip-container:hover .clip-image {
+      transform: scale(1.15);
+      filter: brightness(1.2);
+    }
+
+    .clip-image {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    #input-area {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-top: 1px solid #ddd;
+      background-color: #fff;
+      z-index: 1000;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    #input-area button {
+      padding: 8px 16px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #input-area button:hover {
+      background: #0056b3;
+    }
+
+    #msg {
+      flex-grow: 1;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    #imagen-preview {
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    #imagen-preview img {
+      max-width: 90px;
+      max-height: 90px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .img-msg {
+      max-width: 160px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      display: block;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    @supports (-webkit-touch-callout: none) {
+      html, body {
+        height: 100%;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: hidden;
+      }
+
+      .container {
+        height: 100dvh;
+      }
+
+      #input-area {
+        padding-bottom: env(safe-area-inset-bottom, 10px);
+      }
+    }
+
+    @media (max-width: 600px) {
+      html, body {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+
+      #chat {
+        padding-bottom: 160px; 
+      }
+    }
+
   </style>
 
 </head>
@@ -297,9 +423,16 @@
     <div id="chat"></div>
 
     <div id="input-area">
+      <label for="imagen" class="clip-container" title="Adjuntar imagen">
+        <img src="https://st2.depositphotos.com/5266903/8762/v/950/depositphotos_87625390-stock-illustration-attach-document-icon.jpg" alt="Adjuntar imagen" class="clip-image">
+      </label>
+      <input type="file" id="imagen" class="file-input" accept="image/*">
       <input type="text" id="msg" placeholder="Escribe tu pregunta..." disabled />
       <button onclick="enviar()" disabled>Enviar</button>
     </div>
+
+    <div id="imagen-preview" style="margin-top: 10px;"></div>
+
   </div>
 
   <script>
@@ -334,6 +467,7 @@
     }
 
     function agregarEscribiendo() {
+      if (typingEl) return;
       typingEl = document.createElement('div');
       typingEl.className = 'msg bot typing';
       typingEl.innerHTML = `<span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
@@ -342,7 +476,10 @@
     }
 
     function quitarEscribiendo() {
-      if (typingEl) typingEl.remove();
+      if (typingEl) {
+        typingEl.remove();
+        typingEl = null;
+      }
     }
 
     function escapeHTML(text) {
@@ -354,54 +491,125 @@
     let mensajeAcumulado = '';
     let temporizadorEnvio = null;
 
-    function enviar() {
+    async function enviar() {
       const input = document.getElementById('msg');
+      const imagenInput = document.getElementById('imagen');
       const texto = input.value.trim();
-      if (!texto || !webhook) return;
+      const file = imagenInput.files[0];
 
-      mensajeAcumulado += (mensajeAcumulado ? ' ' : '') + texto;
-      agregarMensaje(escapeHTML(texto), 'user');
-      input.value = '';
+      if (!texto && !file) return;
 
-      if (temporizadorEnvio) {
-        clearTimeout(temporizadorEnvio);
-        quitarEscribiendo();
+      const previewDiv = document.getElementById('imagen-preview');
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const imageHtml = `<img src="${e.target.result}" class="img-msg" alt="imagen enviada">`;
+          const combined = texto ? `${imageHtml}<div>${escapeHTML(texto)}</div>` : imageHtml;
+          agregarMensaje(combined, 'user');
+
+          previewDiv.innerHTML = '';
+          input.value = '';
+          imagenInput.value = '';
+
+          mensajeAcumulado = texto || '[Imagen]';
+          agregarEscribiendo();
+          enviarAcumulado(file);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        agregarMensaje(escapeHTML(texto), 'user');
+        mensajeAcumulado = texto;
+        input.value = '';
+        agregarEscribiendo();
+        enviarAcumulado();
       }
 
-      agregarEscribiendo();
+      document.getElementById('imagen').value = '';
+      document.getElementById('imagen-preview').innerHTML = '';
 
-      temporizadorEnvio = setTimeout(() => {
-        enviarAcumulado();
-      }, 5000);
     }
 
-    async function enviarAcumulado() {
-      quitarEscribiendo();
+    async function enviarAcumulado(file = null) {
       if (!mensajeAcumulado || !webhook) return;
 
-      agregarEscribiendo();
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = async function () {
+          const base64 = reader.result.split(',')[1];
 
+          try {
+            const imgbbRes = await fetch('https://api.imgbb.com/1/upload?key=11aa809dcd9947691a6ef1c104e8b555', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: new URLSearchParams({
+                image: base64
+              })
+            });
+
+            const json = await imgbbRes.json();
+            const imageUrl = json?.data?.url;
+
+            //let html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+            if (!imageUrl) {
+              agregarMensaje('❌ Error al subir imagen.');
+              quitarEscribiendo();
+              return;
+            }
+
+            await enviarRequest(mensajeAcumulado, imageUrl);
+            mensajeAcumulado = '';
+          } catch (err) {
+            console.error('❌ Error al subir a imgbb:', err);
+            agregarMensaje('❌ No se pudo subir la imagen.');
+            quitarEscribiendo();
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        await enviarRequest(mensajeAcumulado, null);
+        mensajeAcumulado = '';
+      }
+
+      /*mensajeAcumulado = '';
+      file = null;
+      document.getElementById('imagen').value = '';
+      document.getElementById('imagen-preview').innerHTML = '';*/
+
+    }
+
+    async function enviarRequest(pregunta, imageUrl = null) {
+      agregarEscribiendo();
       try {
+        const payload = {
+          question: pregunta,
+          sessionId
+        };
+
+        if (imageUrl && imageUrl.startsWith('http') && !imageUrl.includes('undefined') && !imageUrl.includes('null')) {
+          payload.image = imageUrl;
+        }
+
         const res = await fetch(webhook, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: mensajeAcumulado, sessionId })
+          body: JSON.stringify(payload)
         });
 
         quitarEscribiendo();
-
         const raw = await res.text();
         let respuesta = raw?.trim() || "❌ No se recibió respuesta del servidor.";
-        
+
         try {
           const parsed = JSON.parse(raw);
-          if (parsed?.RespuestaFinal) respuesta = parsed.RespuestaFinal;
+          if (parsed?.RespuestaFinal?.trim()) {
+            respuesta = parsed.RespuestaFinal.trim();
+          }
         } catch (e) {
           console.warn("❗ Error al parsear JSON:", e);
         }
 
         let html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
-
         html += `
           <div style="margin-top: 16px;">
             <strong>¿Te ha sido útil esta respuesta?</strong><br>
@@ -409,14 +617,12 @@
             <button class="opcion-btn-asesor" onclick="simularRespuestaUsuario('👎 No', 'no')">👎 No</button>
           </div>
         `;
-
         agregarMensaje(html);
-      } catch {
+
+      } catch (error) {
         quitarEscribiendo();
+        console.error("❌ Error al conectar con el servidor:", error);
         agregarMensaje('❌ Error al conectar con el servidor');
-      } finally {
-        mensajeAcumulado = '';
-        temporizadorEnvio = null;
       }
     }
 
@@ -439,7 +645,6 @@
       document.getElementById('msg').disabled = false;
       document.querySelector('#input-area button').disabled = false;
     }
-
 
     function opcionSeleccionada(texto) {
       agregarMensaje(texto, 'user');
@@ -570,6 +775,32 @@
         enviar();
       }
     });
+
+    document.getElementById('imagen').addEventListener('change', function () {
+      const archivo = this.files[0];
+
+      const previewDiv = document.getElementById('imagen-preview');
+      previewDiv.innerHTML = '';
+
+      if (archivo && archivo.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.alt = 'Vista previa';
+          img.style.maxWidth = '100px';
+          img.style.maxHeight = '100px';
+          img.style.border = '1px solid #ccc';
+          img.style.borderRadius = '8px';
+          img.style.marginTop = '6px';
+          previewDiv.appendChild(img);
+        };
+        reader.readAsDataURL(archivo);
+      } else {
+        previewDiv.innerHTML = '<span style="color: gray;">Archivo no válido</span>';
+      }
+    });
+
   </script>
 </body>
 </html>
