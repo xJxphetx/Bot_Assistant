@@ -9,15 +9,16 @@
     html, body {
       margin: 0;
       padding: 0;
+      height: 100%;
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(to bottom, #e6f0ff, #ffffff);
-      height: 100%;
     }
     body {
       display: flex;
       justify-content: center;
       align-items: stretch;
     }
+
     .container {
       display: flex;
       flex-direction: column;
@@ -29,6 +30,7 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
+    
     .header {
       display: flex;
       align-items: center;
@@ -36,19 +38,21 @@
       background-color: #0056b3;
       color: #fff;
     }
+
     .header img {
       height: 36px;
       margin-right: 12px;
     }
+
     .header h2 {
       font-size: 20px;
       margin: 0;
     }
+
     #chat {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
-      padding-bottom: 120px;
+      padding: 20px 20px 120px;
       background-color: #f9f9f9;
       display: flex;
       flex-direction: column;
@@ -93,9 +97,10 @@
       border-radius: 18px;
       max-width: 75%;
       word-wrap: break-word;
-      line-height: 1.4;
       font-size: 15px;
+      line-height: 1.4;
       animation: fadeIn 0.3s ease-in;
+      position: relative;
     }
 
     .msg.bot {
@@ -118,6 +123,7 @@
     .msg.bot {
       position: relative;
     }
+
     .msg.bot::before {
       content: "";
       position: absolute;
@@ -348,19 +354,90 @@
       border-radius: 6px;
     }
 
-    #imagen-preview {
-      margin-top: 6px;
+    #input-area {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 6px;
+      padding: 10px 12px;
+      border-top: 1px solid #ddd;
+      background-color: #fff;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .input-row {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
+      gap: 10px;
+    }
+
+    .input-row input[type="text"] {
+      flex-grow: 1;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .preview-container {
+      position: relative;
+      width: fit-content;
+      max-width: 100%;
+      margin-bottom: 4px;
+    }
+
+    .preview-container img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      display: block;
+    }
+
+    .preview-container .remove-btn {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #616161;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+    }
+
+    .preview-container .remove-btn:hover {
+      background: #616161;
     }
 
     #imagen-preview img {
-      max-width: 90px;
-      max-height: 90px;
-      border-radius: 8px;
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
+      object-fit: cover;
       border: 1px solid #ccc;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    #imagen-preview .remove-btn {
+      background: #616161;
+      border: none;
+      color: white;
+      font-size: 12px;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-left: 6px;
     }
 
     .img-msg {
@@ -390,8 +467,7 @@
     @media (max-width: 600px) {
       html, body {
         height: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
+        overflow: hidden;
       }
 
       .container {
@@ -399,23 +475,97 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        position: relative;
+        position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
       }
 
-      #input-area {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-
       #chat {
-        padding-bottom: 180px; 
+        padding-bottom: 160px; 
       }
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #custom-input {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      padding: 6px 10px;
+      gap: 6px;
+      flex-grow: 1;
+    }
+
+    #custom-input input[type="text"] {
+      border: none;
+      outline: none;
+      font-size: 15px;
+      background: transparent;
+    }
+
+    .preview-stack {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .preview-stack img {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .image-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .image-wrapper img {
+      display: block;
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .image-wrapper .remove-btn {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #444444;
+      color: rgb(241, 241, 241);
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      transition: background 0.2s ease;
+      z-index: 1;
+    }
+
+    .image-wrapper.fade-out {
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.2s ease;
     }
 
   </style>
@@ -431,15 +581,21 @@
     <div id="chat"></div>
 
     <div id="input-area">
-      <label for="imagen" class="clip-container" title="Adjuntar imagen">
-        <img src="https://st2.depositphotos.com/5266903/8762/v/950/depositphotos_87625390-stock-illustration-attach-document-icon.jpg" alt="Adjuntar imagen" class="clip-image">
-      </label>
-      <input type="file" id="imagen" class="file-input" accept="image/*">
-      <input type="text" id="msg" placeholder="Escribe tu pregunta..." disabled />
-      <button onclick="enviar()" disabled>Enviar</button>
-    </div>
 
-    <div id="imagen-preview" style="margin-top: 10px;"></div>
+      <div class="input-row">
+        <label for="imagen" class="clip-container" title="Adjuntar imagen">
+          <img src="https://st2.depositphotos.com/5266903/8762/v/950/depositphotos_87625390-stock-illustration-attach-document-icon.jpg" alt="Adjuntar imagen" class="clip-image">
+        </label>
+        <input type="file" id="imagen" class="file-input" accept="image/*">
+        
+        <div id="custom-input">
+          <div id="imagen-preview" class="preview-stack"></div>
+          <input type="text" id="msg" placeholder="Escribe tu pregunta..." disabled />
+        </div>
+        
+        <button onclick="enviar()" disabled>Enviar</button>
+      </div>
+    </div>
 
   </div>
 
@@ -475,7 +631,10 @@
     }
 
     function agregarEscribiendo() {
-      if (typingEl) return;
+      if (typingEl) {
+        quitarEscribiendo();
+      }
+
       typingEl = document.createElement('div');
       typingEl.className = 'msg bot typing';
       typingEl.innerHTML = `<span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
@@ -498,42 +657,47 @@
 
     let mensajeAcumulado = '';
     let temporizadorEnvio = null;
+    let escribiendoMostrado = false;
 
     async function enviar() {
       const input = document.getElementById('msg');
-      const imagenInput = document.getElementById('imagen');
       const texto = input.value.trim();
+      const imagenInput = document.getElementById('imagen');
       const file = imagenInput.files[0];
 
       if (!texto && !file) return;
 
-      const previewDiv = document.getElementById('imagen-preview');
       if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
           const imageHtml = `<img src="${e.target.result}" class="img-msg" alt="imagen enviada">`;
           const combined = texto ? `${imageHtml}<div>${escapeHTML(texto)}</div>` : imageHtml;
           agregarMensaje(combined, 'user');
-
-          previewDiv.innerHTML = '';
-          input.value = '';
-          imagenInput.value = '';
-
-          mensajeAcumulado = texto || '[Imagen]';
-          agregarEscribiendo();
-          enviarAcumulado(file);
         };
         reader.readAsDataURL(file);
       } else {
         agregarMensaje(escapeHTML(texto), 'user');
-        mensajeAcumulado = texto;
-        input.value = '';
-        agregarEscribiendo();
-        enviarAcumulado();
       }
 
-      document.getElementById('imagen').value = '';
+      if (texto) {
+        mensajeAcumulado += (mensajeAcumulado ? ' ' : '') + texto;
+      }
+
+      input.value = '';
+      imagenInput.value = '';
       document.getElementById('imagen-preview').innerHTML = '';
+
+      if (temporizadorEnvio) {
+        clearTimeout(temporizadorEnvio);
+      }
+
+      agregarEscribiendo();
+
+      // Reinicia el temporizador para enviar al webhook
+      temporizadorEnvio = setTimeout(() => {
+        enviarAcumulado(file);
+        quitarEscribiendo();
+      }, 5000);
 
     }
 
@@ -549,15 +713,11 @@
             const imgbbRes = await fetch('https://api.imgbb.com/1/upload?key=11aa809dcd9947691a6ef1c104e8b555', {
               method: 'POST',
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              body: new URLSearchParams({
-                image: base64
-              })
+              body: new URLSearchParams({ image: base64 })
             });
 
             const json = await imgbbRes.json();
             const imageUrl = json?.data?.url;
-
-            //let html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
 
             if (!imageUrl) {
               agregarMensaje('❌ Error al subir imagen.');
@@ -575,19 +735,12 @@
         };
         reader.readAsDataURL(file);
       } else {
-        await enviarRequest(mensajeAcumulado, null);
+        await enviarRequest(mensajeAcumulado);
         mensajeAcumulado = '';
       }
-
-      /*mensajeAcumulado = '';
-      file = null;
-      document.getElementById('imagen').value = '';
-      document.getElementById('imagen-preview').innerHTML = '';*/
-
     }
 
     async function enviarRequest(pregunta, imageUrl = null) {
-      agregarEscribiendo();
       try {
         const payload = {
           question: pregunta,
@@ -604,7 +757,6 @@
           body: JSON.stringify(payload)
         });
 
-        quitarEscribiendo();
         const raw = await res.text();
         let respuesta = raw?.trim() || "❌ No se recibió respuesta del servidor.";
 
@@ -786,26 +938,36 @@
 
     document.getElementById('imagen').addEventListener('change', function () {
       const archivo = this.files[0];
-
-      const previewDiv = document.getElementById('imagen-preview');
+      const previewDiv = document.querySelector('.preview-stack');
       previewDiv.innerHTML = '';
 
       if (archivo && archivo.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = function (e) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'image-wrapper';
+
           const img = document.createElement('img');
           img.src = e.target.result;
           img.alt = 'Vista previa';
-          img.style.maxWidth = '100px';
-          img.style.maxHeight = '100px';
-          img.style.border = '1px solid #ccc';
-          img.style.borderRadius = '8px';
-          img.style.marginTop = '6px';
-          previewDiv.appendChild(img);
+
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'remove-btn';
+          removeBtn.innerHTML = '×';
+          removeBtn.onclick = function () {
+            document.getElementById('imagen').value = '';
+            wrapper.classList.add('fade-out');
+            setTimeout(() => {
+              previewDiv.innerHTML = '';
+              document.getElementById('msg').focus();
+            }, 200);
+          };
+
+          wrapper.appendChild(img);
+          wrapper.appendChild(removeBtn);
+          previewDiv.appendChild(wrapper);
         };
         reader.readAsDataURL(archivo);
-      } else {
-        previewDiv.innerHTML = '<span style="color: gray;">Archivo no válido</span>';
       }
     });
 
