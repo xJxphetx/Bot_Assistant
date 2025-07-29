@@ -693,10 +693,8 @@
 
       agregarEscribiendo();
 
-      // Reinicia el temporizador para enviar al webhook
       temporizadorEnvio = setTimeout(() => {
         enviarAcumulado(file);
-        quitarEscribiendo();
       }, 5000);
 
     }
@@ -778,6 +776,7 @@
           </div>
         `;
         agregarMensaje(html);
+        quitarEscribiendo();
 
       } catch (error) {
         quitarEscribiendo();
