@@ -1,5 +1,4 @@
-[flujo-n8n-ai-assistant-actualizado.md](https://github.com/user-attachments/files/21535850/flujo-n8n-ai-assistant-actualizado.md)
-# 🤖 AI Assistant – Flujo n8n para AG Electrónica (versión nueva)
+# 🤖 AI Assistant – Flujo n8n para AG Electrónica
 
 ## Objetivo del flujo
 
