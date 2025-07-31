@@ -35,7 +35,7 @@ Bot_Assistant/
 ├── index.html                          # Interfaz del chatbot (optimizada)
 ├── image.png                           # Captura de la interfaz en acción
 └── README.md                           # Este archivo
-
+```
 ---
 
 ## ¿Cómo funciona?
