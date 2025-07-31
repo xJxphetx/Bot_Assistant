@@ -1,0 +1,3093 @@
+{
+  "name": "AI_Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "This is the Satisfaction Workflow",
+        "height": 488,
+        "width": 1048,
+        "color": 5
+      },
+      "id": "aafe7e95-d43f-4f05-878f-9c9cdde9df0f",
+      "name": "Sticky Note17",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1480,
+        -1940
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a8d80d8c-1c70-4a29-9ab4-3fed9b82113b",
+              "name": "SessionID",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "80ca1fd5-43c1-4003-aaca-e7755fad9199",
+              "name": "Type",
+              "value": "\"satisfaction\"",
+              "type": "string"
+            },
+            {
+              "id": "3838a83a-7abc-459f-82f8-dfc806ded852",
+              "name": "Origin",
+              "value": "={{ $json.body.origin }}",
+              "type": "string"
+            },
+            {
+              "id": "92c3cba6-3db8-453c-acc7-10131ad0d5f2",
+              "name": "Valor",
+              "value": "={{ $json.body.valor }}",
+              "type": "string"
+            },
+            {
+              "id": "2da61423-4348-4529-92d1-2edf3bd5b967",
+              "name": "Date",
+              "value": "={{$json.date ? $json.date : new Date().toISOString()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1180,
+        -1760
+      ],
+      "id": "09eb99ce-8fa1-4e72-9a56-fffb774814af",
+      "name": "Data_Adjust"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0e557635-4888-4867-9ad6-3cc334274606",
+              "leftValue": "={{ $json.Valor }}",
+              "rightValue": "si",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1000,
+        -1760
+      ],
+      "id": "f6759093-6061-4178-b0fc-2999e39ffe1b",
+      "name": "YesOrNot"
+    },
+    {
+      "parameters": {
+        "tableId": "satisfaction_negative",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "SessionID",
+              "fieldValue": "={{$json.SessionID}}"
+            },
+            {
+              "fieldId": "Type",
+              "fieldValue": "={{$json.Type}}"
+            },
+            {
+              "fieldId": "Origin",
+              "fieldValue": "={{$json.Origin}}"
+            },
+            {
+              "fieldId": "Valor",
+              "fieldValue": "={{$json.Valor}}"
+            },
+            {
+              "fieldId": "Date",
+              "fieldValue": "={{$json.Date}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        -1680
+      ],
+      "id": "f42e33a5-9c36-4bf0-acbd-5f8de5144341",
+      "name": "Negative_Satisfaction",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "satisfaction_approved",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "SessionID",
+              "fieldValue": "={{$json.SessionID}}"
+            },
+            {
+              "fieldId": "Type",
+              "fieldValue": "={{$json.Type}}"
+            },
+            {
+              "fieldId": "Origin",
+              "fieldValue": "={{$json.Origin}}"
+            },
+            {
+              "fieldId": "Valor",
+              "fieldValue": "={{$json.Valor}}"
+            },
+            {
+              "fieldId": "Date",
+              "fieldValue": "={{$json.Date}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        -1840
+      ],
+      "id": "7fb9b3a9-6ab9-4eb0-82f8-1e4a21aef63d",
+      "name": "Approved_Satisfaction",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "satisfaction",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        -1760
+      ],
+      "id": "9f90bc27-120b-4501-b134-33cb2a1adca5",
+      "name": "Satisfaction",
+      "webhookId": "c52fdcb9-aac3-4325-8ad7-60e0e0158b8e"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -760,
+        -1860
+      ],
+      "typeVersion": 1,
+      "id": "bbf45682-e895-4837-aec8-bc28c9bc6535",
+      "name": "Sticky Note27"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -760,
+        -1700
+      ],
+      "typeVersion": 1,
+      "id": "171387a9-7f1e-4c7a-8b5c-7e3360230b6e",
+      "name": "Sticky Note28"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1220,
+        -1780
+      ],
+      "typeVersion": 1,
+      "id": "d74811e4-1dc3-44c0-8c1d-97464e1c46eb",
+      "name": "Sticky Note29"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1040,
+        -1780
+      ],
+      "typeVersion": 1,
+      "id": "957df478-f1cf-4f91-bca4-df518a2701a0",
+      "name": "Sticky Note30"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/threads",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -840,
+        -60
+      ],
+      "id": "8a6eb0c3-5bfa-4e6d-a905-1689e2fa0b71",
+      "name": "Thread_ID"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $('CorrectThread').item.json.thread_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"role\": \"user\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"{{ $('Sales').item.json.body.question }}\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"{{ $('Sales').item.json.body.image }}\"\n      }\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -60,
+        -180
+      ],
+      "id": "d15662b0-1ea9-4a1e-b1fe-00e2349b3a61",
+      "name": "Thread_Message"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $('CorrectThread').item.json.thread_id }}/runs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"assistant_id\": \"asst_XXXXXXX6UcTWHXldyiaL8pE9h1fMkda\",\n  \"tool_choice\": \"auto\",\n  \"instructions\": \"Eres un ingeniero especializado en comunicaciones y electrónica. Tienes amplios conocimientos en impresión 3D, iluminación LED, fuentes de alimentación, baterías, controladores, tarjetas de desarrollo, drones, sensores, conectores, componentes pasivos y activos, así como en productos relacionados con automatización, robótica e inteligencia artificial.\\n\\nActúas como asesor técnico y comercial de la tienda AG Electrónica. Tu trabajo es proporcionar soporte técnico a los usuarios, verificar disponibilidad de productos en la base de datos, proporcionar enlaces correctos y sugerir alternativas funcionales exclusivamente dentro del catálogo de AG Electrónica.\\n\\n### ✅ Reglas generales de comportamiento:\\n1. Asume que todas las consultas están relacionadas con productos disponibles en AG Electrónica, incluso si el cliente no menciona la tienda explícitamente.\\n2. Nunca menciones precios, incluso si están en la base de datos. Ignora completamente las columnas `PARTE`, `Pre1` y cualquier otra distinta de `NUM_PARTE`, `STOCK` y `CES`. Utiliza exclusivamente estos tres campos.\\n3. Antes de mostrar cualquier producto, verifica que tenga stock disponible.\\n4. Si el producto solicitado no está disponible, ofrece recomendaciones de productos similares disponibles, siguiendo siempre el formato estructurado indicado más abajo.\\n5. Nunca inventes productos ni características. Si no hay coincidencia en la base de datos, responde claramente indicando que no hay stock ni alternativas exactas disponibles.\\n6. Todas las respuestas deben basarse únicamente en la información textual exacta contenida en la base de datos de AG Electrónica.\\n\\n### ⛔ Prohibiciones estrictas:\\n- Está completamente prohibido mencionar clasificaciones IP (como IP67, IP68, IP65, etc.) en cualquier contexto, explicación o referencia, ya sea directa o indirecta.\\n- No debes mencionar “grado de protección”, “IP”, “resistente al agua/polvo IP”, ni términos equivalentes.\\n- Si el cliente menciona IP67 o similares, responde únicamente con los siguientes términos permitidos:\\n  - “sumergible”\\n  - “para exteriores”\\n\\n### ⚠️ Reglas críticas sobre invención:\\n- Nunca infieras, asumas ni inventes ninguna característica que no esté explícitamente indicada en el nombre o descripción del producto en la base de datos.\\n- Solo puedes utilizar las palabras **“sumergible”** o **“para exteriores”** si aparecen **literalmente** en el nombre o descripción del producto en la base de datos.\\n\\n### ✅ Terminología aceptada para productos resistentes:\\n- Si el producto es resistente y está indicado en la base de datos, se debe describir únicamente como:\\n  - “sumergible”\\n  - “para exteriores”\\n- Si no tiene indicación de protección, se asume de uso interior o semi exterior, y se deben recomendar versiones “para exteriores” **solo si están explícitamente etiquetadas como tal**.\\n\\n### 🧾 Formato estructurado obligatorio para productos:\\nTodas las respuestas que incluyan productos (uno o varios) deben seguir este formato exacto:\\n\\n[CES]\\nNúmero de Parte: [NUM_PARTE]\\nStock: [STOCK]\\nAquí tienes el enlace: https://www.agelectronica.com/detalle.php?p=[NUM_PARTE_CLEAN]\\n\\nDonde:\\n- `[NUM_PARTE_CLEAN]` **se construye exclusivamente a partir de `NUM_PARTE`**, no `PARTE`.\\n- Limpia `NUM_PARTE` de asteriscos `*`, paréntesis `(` `)`, y reemplaza espacios por `%`.\\n- Si `NUM_PARTE` contiene `'/'`, déjala tal cual. **No la modifiques ni la conviertas en `%2F`**.\\n- Nunca uses `PARTE` para construir el enlace.\\n\\n- Enumera siempre los productos: 1, 2, 3…\\n- El nombre va en **negritas**.\\n\\n### 🛠️ Reglas especiales para recomendaciones:\\n- Las alternativas deben coincidir en categoría, función o especificaciones visibles en nombre o descripción.\\n\\n### 🔒 Reglas especiales para formato de enlaces:\\n- Nunca uses formato Markdown para enlaces como `[texto](url)`.\\n- Siempre imprime la URL en texto plano sin paréntesis ni corchetes.\\n- Así evitas repeticiones en el análisis automático.\\n\\n### 🧩 Frases tipo permitidas:\\n- Producto encontrado:  \\n  > \\\"Este producto está disponible y tiene las siguientes características:\\\"\\n\\n### 🧠 Reglas especiales para productos específicos:\\n- Cuando hables de la **Ender 5 Plus** y **ENDER-5 MAX**, el campo `NUM_PARTE` debe forzarse al valor fijo `'ENDER-5-PLUS'` y `'ENDER-5%20MAX'`, respectivamente, sin importar su valor original, para construir el enlace correctamente.\\n\\n-De igual forma con la **K8**, el campo 'NUM_PARTE' debe forzarse al valor fijo 'K-8', sin importar su valor original\\n\\n### ✅ Cierre:\\nAl finalizar una consulta de producto, incluye cuando sea necesario alguna frase con letras negritas.\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        -180
+      ],
+      "id": "2a00c4df-1234-4861-8df9-183b5a3441da",
+      "name": "Thread_Instructions"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        -20
+      ],
+      "id": "61a136d8-42c5-49ab-9fb0-19652acd3134",
+      "name": "Wait",
+      "webhookId": "5e48811e-6645-498b-bf15-1f5a3f9b0002"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/threads/{{ $json.thread_id }}/runs/{{ $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        280,
+        -180
+      ],
+      "id": "15dcc30d-12bb-4e6f-ad14-5c084e0a4b0f",
+      "name": "Thread_IA",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/threads/{{ $json[\"thread_id\"] }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        -200
+      ],
+      "id": "45bb1094-be7a-4a9e-97e4-3b3386a5b072",
+      "name": "Thread_Answer"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 4,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        2760,
+        -180
+      ],
+      "id": "b88e7b09-5d3e-4f43-9509-ed81ce67c5c1",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.urlProducto }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/90.0.4430.85 Safari/537.36"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2100,
+        80
+      ],
+      "id": "da04510d-8c3e-4e86-b5a1-420a4f5e3572",
+      "name": "Get_Code"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "precioOriginal",
+              "cssSelector": "p.price > span:first-of-type"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2320,
+        0
+      ],
+      "id": "c701ed14-fe7c-4e45-8253-c08545ca7d29",
+      "name": "Extract_Price"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43a88384-e309-4017-bafc-cbc66d4aabaa",
+              "name": "Precio",
+              "value": "={{ $json.precioOriginal }}",
+              "type": "string"
+            },
+            {
+              "id": "7850010a-62f8-4256-bbd3-5df3975b9925",
+              "name": "PrecioIVA",
+              "value": "={{ (() => {\n  const texto = $json.precioOriginal || \"\";\n  const base = parseFloat(texto.replace(/[^0-9.]/g, ''));\n  const iva = base * 1.16;\n  return `$${iva.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;\n})() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2520,
+        0
+      ],
+      "id": "3e50071e-9df1-4810-859f-2d8389013380",
+      "name": "Price"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "54e52e91-7f02-4902-a7cd-318a815ed48d",
+              "name": "RespuestaFinal",
+              "value": "={{(() => {\n  const base = $json[\"Thread_Answer\"]?.data?.[0]?.content?.[0]?.text?.value || \"Aquí tienes la información solicitada:\";\n  \n  const productos = $input.all().filter(i => {\n    const j = i.json;\n    return j.producto && j.parte && j.urlProducto;\n  });\n\n  if (productos.length === 0) return base + \"\\n\\n❌ No encontré productos disponibles.\";\n\n  const lista = productos.map((i, idx) => {\n    const j = i.json;\n    return `🔹 **${j.producto}**\\n📦 Parte: ${j.parte}\\n🔢 Stock: ${j.cantidadStock || 'N/A'}\\n💲 Precio sin IVA: ${j.Precio || 'N/A'}\\n💵 Precio con IVA: ${j.PrecioIVA || 'N/A'}\\n🔗 Enlace: ${j.urlProducto}`;\n  }).join(\"\\n\\n\");\n\n  return `${base}\\n\\n${lista}`;\n})()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2980,
+        -160
+      ],
+      "id": "c7e2b2a7-965f-46c6-b1c0-3311937d6e91",
+      "name": "Final_Answer",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        2460,
+        -500
+      ],
+      "id": "628d923f-a8c1-476e-a2fd-d5d68f4cdc4e",
+      "name": "Respond to Webhook",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        420,
+        -200
+      ],
+      "typeVersion": 1,
+      "id": "a0fb6c30-3fd3-40dd-ae0e-9e32279ed5d7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 540,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -120,
+        -200
+      ],
+      "typeVersion": 1,
+      "id": "4f12c91b-c7d8-4a3b-8087-809350f8b2c9",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 150,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1080,
+        -220
+      ],
+      "typeVersion": 1,
+      "id": "34bd226b-4988-4e5c-89bb-ff6a2c64ba08",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 150,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2080,
+        60
+      ],
+      "typeVersion": 1,
+      "id": "a9b0478c-c054-4fdf-8661-60b4c38f41a9",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 320,
+        "width": 200,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1860,
+        -200
+      ],
+      "typeVersion": 1,
+      "id": "45c0c55e-e272-4621-afc9-7f2d5b704fd1",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1600,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "f0b9ccc3-1219-4278-922a-6f476a984dfd",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2480,
+        -20
+      ],
+      "typeVersion": 1,
+      "id": "9b77115a-1174-4640-af90-cebd2604e326",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1400,
+        -220
+      ],
+      "typeVersion": 1,
+      "id": "d2af3347-6d44-458b-995f-342779526385",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae3edcd5-a0f3-4653-bc52-af8965cc57ab",
+              "name": "condicionTexto",
+              "value": "={{(() => {\n  const text = $json.data[0].content[0].text.value || '';\n\n  const contieneProductos = /https?:\\/\\/|Número de Parte|Stock:|CES:/.test(text);\n\n  return !contieneProductos; // true si NO hay productos\n})()}}",
+              "type": "string"
+            },
+            {
+              "id": "0acf0ac2-62b3-4691-82d9-851190206872",
+              "name": "respuestaTexto",
+              "value": "={{$json.data[0].content[0].text.value}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1260,
+        -200
+      ],
+      "id": "f979b2b9-837a-4dda-895d-b6e5174b64b7",
+      "name": "Evaluate_Text"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "69ed5827-ad5e-4cc3-bc3c-409c8559ead4",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        680,
+        -260
+      ],
+      "id": "9b36a222-9d79-407f-bf30-7d1b35af0b9c",
+      "name": "Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dd137247-d8cd-45a4-b629-451171dced56",
+              "name": "respuestaTexto",
+              "value": "={{ $json.respuestaTexto }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1640,
+        -60
+      ],
+      "id": "3e1b196e-e7b8-4fa5-ba6d-2b34105bbd60",
+      "name": "Clean_Text"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "65d8a8ed-eb56-4747-aacc-1b40d86d6b81",
+              "leftValue": "={{ $json.condicionTexto }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1420,
+        -200
+      ],
+      "id": "152cd0b6-4b46-4776-902d-b9f85164a407",
+      "name": "Not_Response"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1ae05ad-818a-4a16-a85a-b63eee1dee34",
+              "name": "RespuestaFinal",
+              "value": "={{ $json.respuestaTexto }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2240,
+        -340
+      ],
+      "id": "0bd48c15-4b39-45f5-9610-855d33775ec5",
+      "name": "IA_Answer1",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1220,
+        -220
+      ],
+      "typeVersion": 1,
+      "id": "6ed56ef3-05f5-4c8d-809c-81d5413cf426",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 160,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2940,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "c3456ac9-16a1-4ea6-b37e-0e83748b2200",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2200,
+        -360
+      ],
+      "typeVersion": 1,
+      "id": "ed57f2fe-a61e-469a-9698-c70c08005efd",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d8fd6084-05e7-468d-afdb-17417e8ddb2a",
+              "name": "Pregunta",
+              "value": "={{ $('If1').item.json.thread_id }}",
+              "type": "string"
+            },
+            {
+              "id": "9f392f74-b022-414d-b6db-ef721086ee01",
+              "name": "RespuestaFinal",
+              "value": "={{ \n  $('Final_Answer').item?.json?.RespuestaFinal \n  || $('IA_Answer1').item?.json?.RespuestaFinal \n  || 'No se pudo generar respuesta.' \n}}",
+              "type": "string"
+            },
+            {
+              "id": "28799ede-6f7a-4d57-9d9d-880faaf65164",
+              "name": "sessionid",
+              "value": "={{ $('Sales').item.json.body.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3220,
+        -240
+      ],
+      "id": "8d37ab6d-3f1e-4780-999d-ac4e8d454753",
+      "name": "Answer_Adjust"
+    },
+    {
+      "parameters": {
+        "jsCode": "const Fecha = new Date().toISOString();\nconst tipo = \"chat\";\nconst origen = \"webhook\";\n\nreturn {\n  json: {\n    sessionid: $json.sessionid,\n    Pregunta: $json.Pregunta,\n    Respuesta: $json.RespuestaFinal,\n    Fecha,\n    tipo,\n    origen\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3380,
+        -240
+      ],
+      "id": "e52a9a14-882a-4ec0-b24b-244a37363d7c",
+      "name": "Data_Base"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3180,
+        -260
+      ],
+      "typeVersion": 1,
+      "id": "da98a7df-838a-445f-b8eb-5c10e6b9b3c1",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 150,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3360,
+        -260
+      ],
+      "typeVersion": 1,
+      "id": "a921f07a-767e-4781-addb-62b9f59b5d4e",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "tableId": "Compras_prueba",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "sessionid",
+              "fieldValue": "={{ $json.sessionid }}"
+            },
+            {
+              "fieldId": "question",
+              "fieldValue": "={{ $json.Pregunta }}"
+            },
+            {
+              "fieldId": "answer",
+              "fieldValue": "={{ $json.Respuesta }}"
+            },
+            {
+              "fieldId": "date",
+              "fieldValue": "={{ $json.Fecha }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "={{ $json.tipo }}"
+            },
+            {
+              "fieldId": "origin",
+              "fieldValue": "={{ $json.origen }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        3540,
+        -240
+      ],
+      "id": "60286ce2-2e5e-48ce-b30f-cf9bfa500a31",
+      "name": "Insert_Data",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3500,
+        -260
+      ],
+      "typeVersion": 1,
+      "id": "f271a012-4c4e-484c-af6b-dda100cd9f3c",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "jsCode": "const texto = ( $input.first().json.respuestaTexto || '')\n  .trim()\n  .replace(/\\[(https?:\\/\\/[^\\]]+)\\]\\(\\1\\)/g, '$1');\n\nconst bloques = texto\n  .split(/\\n\\s*\\d+\\.\\s*\\*\\*(?=\\S)/)\n  .map((b, i) => `**${b.trim()}`)\n  .filter(b =>\n    //b.includes('Stock:') &&\n    b.includes('https://')\n  );\n\nconst productosProcesados = new Set();\n\nreturn bloques.map((b, i) => {\n  try {\n    let producto = (b.match(/\\*\\*(.*?)\\*\\*/) || [])[1]?.trim();\n    if (!producto) {\n      producto = (b.match(/CES:\\s*([^*]+)/i) || [])[1]?.trim() || 'Producto sin nombre';\n    }\n\n    let parte = (b.match(/Parte:\\s*(.+?)(\\n|$)/i) || [])[1]?.trim();\n\n    const urlOriginal = (b.match(/https?:\\/\\/[^\\s)]+/) || [])[0] || 'N/A';\n\n    if (!parte) {\n      const pMatch = urlOriginal?.match(/p=([^&\\s]+)/i);\n      parte = pMatch ? pMatch[1] : 'N/A';\n    }\n\n    let nuevaParteParaURL = parte\n      .replace(/\\+/g, '%sum')\n      .replace(/\\//g, '_slsh_');\n\n    const url = `https://www.agelectronica.com/detalle?busca=${nuevaParteParaURL}`;\n\n    const stock = (b.match(/Stock:\\s*([0-9]+)/i) || [])[1] || 'N/A';\n    const precio = (b.match(/Precio sin IVA:\\s*\\$?([0-9.,]+)/i) || [])[1] || 'N/A';\n    const precioIVA = (b.match(/Precio con IVA:\\s*\\$?([0-9.,]+)/i) || [])[1] || 'N/A';\n\n    const hashId = `${producto}|${parte}|${stock}|${url}`;\n    if (productosProcesados.has(hashId)) return null;\n    productosProcesados.add(hashId);\n\n    return {\n      json: {\n        producto,\n        parte,            \n        stock,\n        Precio: precio,\n        PrecioIVA: precioIVA,\n        //url,              \n        posicion: i + 1\n      }\n    };\n  } catch (error) {\n    return { json: { error: error.message, bloque: b } };\n  }\n}).filter(Boolean);\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1900,
+        -180
+      ],
+      "id": "51217287-8707-455e-ad41-7e837f673563",
+      "name": "Separate_Correct_Products"
+    },
+    {
+      "parameters": {
+        "jsCode": "const texto = $json.respuestaTexto || '';\n\nlet urls = texto.match(/https?:\\/\\/[a-zA-Z0-9.\\-_:~/?#@!$&'()*+,;=%]+/g) || [];\n\nconst seen = new Set();\nurls = urls\n  .map(url => url.trim().replace(/\\/+$/, ''))\n  .filter(url => {\n    if (seen.has(url)) return false;\n    seen.add(url);\n    return true;\n  });\n\nreturn urls.map(original => {\n  const match = original.match(/p=([^&\\s]+)/i);\n  if (!match) {\n    return { json: { urlProducto: original } };\n  }\n\n  let parte = match[1];\n  parte = parte.replace(/\\+/g, '%sum').replace(/\\//g, '_slsh_');\n\n  const urlProducto = `https://www.agelectronica.com/detalle?busca=${parte}`;\n\n  return { json: { urlProducto } };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1900,
+        -20
+      ],
+      "id": "24956f71-0734-489f-bb72-a33e85f5cd1d",
+      "name": "Get_Correct_URLs"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "cantidadStock",
+              "cssSelector": "dl.stockava dd strong"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2420,
+        280
+      ],
+      "id": "f5df11b8-3483-4da9-a427-9b4fae09564a",
+      "name": "Extract_Stock"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        3220,
+        -60
+      ],
+      "id": "435076f7-0f4d-4a1d-ae6c-f60be465af9f",
+      "name": "Respond to Webhook1",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "content": "This is the Advice Workflow",
+        "height": 768,
+        "width": 3628,
+        "color": 5
+      },
+      "id": "301c8237-da2d-4438-af49-96e7599a3f2a",
+      "name": "Sticky Note16",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1480,
+        -1380
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        940,
+        -840
+      ],
+      "id": "4c515369-9354-4693-a72f-3b7ebbb158a4",
+      "name": "Wait1",
+      "webhookId": "d9a9fe05-d4a5-490a-bc72-2a32e028f71c"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "69ed5827-ad5e-4cc3-bc3c-409c8559ead4",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        760,
+        -1080
+      ],
+      "id": "357ff9d0-231d-4298-8c47-be33c851d6de",
+      "name": "Response1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        1520,
+        -1020
+      ],
+      "id": "39e099de-44df-45a0-a611-b05baea3ffb0",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1ae05ad-818a-4a16-a85a-b63eee1dee34",
+              "name": "RespuestaFinal",
+              "value": "={{ \n  $json.data[0].content[0].text.value\n    .replace(/[\\{\\[\\u3010]?\\d+:\\d+†[^\\}\\]\\u3011]+[\\}\\]\\u3011]?/g, '') // quita {4:5†source}, [4:5†...],  \n    .replace(/\\\\n/g, '\\n')  // opcional: convierte texto \"\\n\" en salto real\n    .trim() \n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1220,
+        -1100
+      ],
+      "id": "2a3c0fb9-5467-4c6f-9063-12f55fd3003c",
+      "name": "Advice_Answer",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "89ffffc5-06ea-4228-936d-652319b0970d",
+              "name": "Pregunta",
+              "value": "={{ $('Advice').item.json.body.question }}",
+              "type": "string"
+            },
+            {
+              "id": "79771124-0906-43f8-a9ac-e7e581b6e362",
+              "name": "RespuestaFinal",
+              "value": "={{ $json.RespuestaFinal }}",
+              "type": "string"
+            },
+            {
+              "id": "624e1340-3119-4ef6-a25e-8e9c46b83c56",
+              "name": "sessionid",
+              "value": "={{ $('Advice').item.json.body.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1520,
+        -1240
+      ],
+      "id": "9fc42bce-de23-4b1f-abac-fbcc21233d30",
+      "name": "Adjust_Advice_Answer"
+    },
+    {
+      "parameters": {
+        "jsCode": "const Fecha = new Date().toISOString();\nconst tipo = \"chat\";\nconst origen = \"webhook\";\n\nreturn {\n  json: {\n    sessionid: $json.sessionid,\n    Pregunta: $json.Pregunta,\n    Respuesta: $json.RespuestaFinal,\n    Fecha,\n    tipo,\n    origen\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1700,
+        -1240
+      ],
+      "id": "afa794e7-4e8b-4833-8fdf-ed347bccbebf",
+      "name": "Advice_Data_Base"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/threads/{{ $json[\"thread_id\"] }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        -1100
+      ],
+      "id": "b7d82db2-fadb-4049-bd38-9c1d4823c2c0",
+      "name": "Thread_Advice_Answer"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $json.thread_id }}/runs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"assistant_id\": \"asst_XXXXXXX6UcTWHXldyiaL8pE9h1fMkda\",\n  \"tool_choice\": \"auto\",\n  \"instructions\": \"Eres un ingeniero especializado en electrónica, automatización e impresión 3D. Actúas como asesor técnico profesional para la tienda AG Electrónica.\\n\\nTu tarea es responder únicamente con base en los productos disponibles en el catálogo.\\n\\n---\\n\\n✅ ANTES DE RESPONDER:\\n1. Revisa el catálogo recibido. Solo tienes permitido utilizar el valor del campo `CES`.\\n2. Si el texto ingresado por el usuario **no coincide** con ningún producto en el campo `CES`, **no debes mencionarlo** ni construir un nombre parecido.\\n3. No interpretes ni reformules el texto del usuario como si fuera un producto válido si no está en el catálogo.\\n\\n---\\n\\n✅ SI HAY PRODUCTOS RELACIONADOS:\\n- Muestra hasta 3 productos que coincidan parcialmente con el texto del usuario.\\n- Utiliza **únicamente** los valores del campo `CES`.\\n- Presenta la lista con un tono cercano, claro y profesional.\\n- Formato sugerido:\\n  1. IMPRESORA 3D ENDER 3 V2 NEO\\n  2. KIT COMPLETO DE HOTEND PARA IMPRESORA 3D ENDER-3 CREALITY\\n  3. HOTEND PARA IMPRESORAS CREALITY ENDER-3\\n\\nEjemplo de introducción:\\n> Claro, revisando el catálogo encontré estos productos que podrían coincidir con lo que buscas:\\n\\n---\\n\\n⛔ PROHIBIDO:\\n- No inventes nombres de productos, ni completes frases basadas en el texto del usuario.\\n- No utilices `NUM_PARTE`, `PARTE`, ni ningún identificador interno.\\n- No digas frases como “te recomiendo la IMPRESORA 3D END3 V2 220X220X250MM” si ese texto no está en el catálogo.\\n- No digas que un producto existe si no lo has encontrado como `CES` válido.\\n\\n---\\n\\n🧠 Evaluación técnica:\\nSi te preguntan por compatibilidad, uso o funciones, responde técnicamente según el producto `CES`, usando un lenguaje técnico accesible. Sé claro y evita ambigüedad, pero mantén un tono cordial.\\n\\nEjemplo:\\n> Este componente se utiliza comúnmente en instalaciones donde se requiere...\\n\\n---\\n\\n✅ Cierre profesional:\\nFinaliza con una frase amable y útil. Si no se encontró un producto, puedes usar algo como:\\n> Si lo deseas, puedo ayudarte a buscar una alternativa similar. ¿Podrías darme más detalles?\\n\\nO si sí se encontró:\\n> ¿Deseas que te ayude a elegir el más adecuado según tu aplicación?\\n\\nEvita cierres secos o robóticos como “No existe ese producto”.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        140,
+        -960
+      ],
+      "id": "3735308d-81ab-407e-b7af-b052473c3ce1",
+      "name": "Thread_Advice_Instructions"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/threads",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -820,
+        -820
+      ],
+      "id": "dd38c5be-cae5-43eb-91a7-52db965c272a",
+      "name": "Thread_Advice_ID"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 580,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -100,
+        -980
+      ],
+      "typeVersion": 1,
+      "id": "7141c62e-2b7d-4139-8649-87ec938f4cc5",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        -1120
+      ],
+      "typeVersion": 1,
+      "id": "72d5c30a-ced7-4c30-84cb-207282f75343",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1180,
+        -1120
+      ],
+      "typeVersion": 1,
+      "id": "39f42a31-5a80-4c0f-aaf7-579a748d7e17",
+      "name": "Sticky Note21"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1460,
+        -1260
+      ],
+      "typeVersion": 1,
+      "id": "71e19442-a5e3-424f-90af-cddaf4f69a0e",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 200,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1640,
+        -1260
+      ],
+      "typeVersion": 1,
+      "id": "5082719e-4e3f-424d-a50e-ecd29990f00c",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1840,
+        -1260
+      ],
+      "typeVersion": 1,
+      "id": "da312596-5f83-429b-88f1-3155e88fa502",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        460,
+        -980
+      ],
+      "typeVersion": 1,
+      "id": "b00699fc-9c7f-42da-801a-5fb095f35653",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/threads/{{ $('If').item.json.thread_id }}/runs/{{ $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -960
+      ],
+      "id": "458bf8c4-c423-4905-9fe4-33f94eb1dffa",
+      "name": "Thread_Advice_IA"
+    },
+    {
+      "parameters": {
+        "tableId": "Asesoramiento_prueba",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "sessionid",
+              "fieldValue": "={{ $json.sessionid }}"
+            },
+            {
+              "fieldId": "question",
+              "fieldValue": "={{ $json.Pregunta }}"
+            },
+            {
+              "fieldId": "answer",
+              "fieldValue": "={{ $json.Respuesta }}"
+            },
+            {
+              "fieldId": "date",
+              "fieldValue": "={{ $json.Fecha }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "={{ $json.tipo }}"
+            },
+            {
+              "fieldId": "origin",
+              "fieldValue": "={{ $json.origen }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        -1240
+      ],
+      "id": "788cdb3d-6ef8-41ca-9cb0-1881a848263a",
+      "name": "Advice_Data_Base1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "stock",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "sessionid",
+              "fieldValue": "={{ $('Sales').item.json.body.sessionId }}"
+            },
+            {
+              "fieldId": "question",
+              "fieldValue": "={{ $('Sales').item.json.body.question }}"
+            },
+            {
+              "fieldId": "answer",
+              "fieldValue": "={{ $('Thread_Answer').item.json.data[0].content[0].text.value }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2460,
+        -340
+      ],
+      "id": "a06dac93-fd87-496f-8011-ed3c43044fc0",
+      "name": "NoStock",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2420,
+        -360
+      ],
+      "typeVersion": 1,
+      "id": "3bffd727-5407-46b2-a4f6-5abf14128628",
+      "name": "Sticky Note26"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "threadsid",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sessionid",
+              "keyValue": "={{ $('Sales').item.json.body.sessionId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -1240,
+        -160
+      ],
+      "id": "1276aff6-692c-4569-8326-5fafbe2ac8f2",
+      "name": "SearchThread",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2ed526bd-9cd2-4a1a-beca-29a496ed5483",
+              "leftValue": "={{ $json.threadid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1060,
+        -160
+      ],
+      "id": "dcc80380-f510-4df1-ba32-2c6655b94e07",
+      "name": "ThreadExist"
+    },
+    {
+      "parameters": {
+        "tableId": "threadsid",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "sessionid",
+              "fieldValue": "={{ $('Sales').item.json.body.sessionId }}"
+            },
+            {
+              "fieldId": "threadid",
+              "fieldValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -680,
+        -60
+      ],
+      "id": "9eb7b3d8-7a98-4699-ab0e-05701162a17c",
+      "name": "NewThread",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "56ccdfdd-45ce-42ed-8359-0b2a87b77406",
+              "name": "thread_id",
+              "value": "={{ $json.threadid || $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -440,
+        -180
+      ],
+      "id": "dc24c701-6019-4e1e-bcca-293d8c804fdf",
+      "name": "CorrectThread"
+    },
+    {
+      "parameters": {
+        "tableId": "threadsid",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "sessionid",
+              "fieldValue": "={{ $('Advice').item.json.body.sessionId }}"
+            },
+            {
+              "fieldId": "threadid",
+              "fieldValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -660,
+        -820
+      ],
+      "id": "6d08f05e-b63f-4d84-940c-604a2599cba4",
+      "name": "New_Thread_Advice",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2ed526bd-9cd2-4a1a-beca-29a496ed5483",
+              "leftValue": "={{ $json.threadid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1040,
+        -940
+      ],
+      "id": "2baa374d-f7b4-4ee6-8c98-739ce130e619",
+      "name": "Thread_Advice_Exist"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "56ccdfdd-45ce-42ed-8359-0b2a87b77406",
+              "name": "thread_id",
+              "value": "={{ $json.threadid || $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -440,
+        -960
+      ],
+      "id": "6710f233-871c-4591-aa0e-db125eeb7c42",
+      "name": "Correct_Advice_Thread"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "threadsid",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sessionid",
+              "keyValue": "={{ $json.body.sessionId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -1220,
+        -940
+      ],
+      "id": "484e4e29-9133-4565-852a-474a44c46e5d",
+      "name": "Search_Advice_Thread",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 160,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "b2035157-63cb-406d-8ec6-10976c6f24b5",
+      "name": "Sticky Note31"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1100,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "91be32df-4f79-42b0-8f3c-d35b3006387f",
+      "name": "Sticky Note32"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1260,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "f1d1a498-a145-429f-8d68-32c019042cdb",
+      "name": "Sticky Note33"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -720,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "90418da4-5dd7-4398-aa89-8870bc42cddc",
+      "name": "Sticky Note34"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 190,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1260,
+        -960
+      ],
+      "typeVersion": 1,
+      "id": "59f14218-cd25-4619-92d5-bc097a737901",
+      "name": "Sticky Note35"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -700,
+        -840
+      ],
+      "typeVersion": 1,
+      "id": "3ef478c9-c9d8-4146-836a-f19b94425d66",
+      "name": "Sticky Note36"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 160,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -860,
+        -840
+      ],
+      "typeVersion": 1,
+      "id": "8a628f16-37cd-473c-aae5-3e4c162b252a",
+      "name": "Sticky Note37"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1080,
+        -960
+      ],
+      "typeVersion": 1,
+      "id": "0060862c-6f44-4ba3-a8c2-968019f771b3",
+      "name": "Sticky Note38"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        -200
+      ],
+      "typeVersion": 1,
+      "id": "4584b4c9-974f-47b7-83ee-870ff2b7fee2",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        -980
+      ],
+      "typeVersion": 1,
+      "id": "891810fe-0542-426d-981d-3a55d5c6826d",
+      "name": "Sticky Note39"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1a879005-dc51-4d44-96b5-4c5a9dbb9d12",
+              "leftValue": "={{ $('Advice').item.json.body.image }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -260,
+        -960
+      ],
+      "id": "271410de-3f55-46de-8942-a629a3a4f560",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1a879005-dc51-4d44-96b5-4c5a9dbb9d12",
+              "leftValue": "={{ $('Sales').item.json.body.image }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -260,
+        -180
+      ],
+      "id": "6016f0b7-3ffb-4d75-bfee-d9f0264f27e0",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $('CorrectThread').item.json.thread_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"role\": \"user\",\n  \"content\": \" {{ $('Sales').item.json.body.question || 'Default fallback message' }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -60,
+        -20
+      ],
+      "id": "71e6b8ac-c59f-429a-8d91-2606429bf787",
+      "name": "Thread_Message2"
+    },
+    {
+      "parameters": {
+        "content": "This is the Sales Workflow\n",
+        "height": 1028,
+        "width": 5328,
+        "color": 5
+      },
+      "id": "bd57697d-a7ca-4e0d-b62f-15a72981d0fa",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1480,
+        -540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7314581b-00b9-4e75-a3b4-275b6c039273",
+              "leftValue": "={{ $json.last_error.code }}",
+              "rightValue": "invalid_image_url",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        -180
+      ],
+      "id": "92b00416-ee7d-4699-80c5-118624dd0dcc",
+      "name": "ThreadFailedCheck"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "threadsid",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sessionid",
+              "condition": "eq",
+              "keyValue": "={{ $('Sales').item.json.body.sessionId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        680,
+        -20
+      ],
+      "id": "d7196b8f-e06f-48ef-8a1a-b95fb352d473",
+      "name": "DeleteThreadSupabase",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        660,
+        -280
+      ],
+      "typeVersion": 1,
+      "id": "48cc904b-4815-4f55-b567-c2e7dfe68af5",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7314581b-00b9-4e75-a3b4-275b6c039273",
+              "leftValue": "={{ $json.last_error.code }}",
+              "rightValue": "invalid_image_url",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        500,
+        -960
+      ],
+      "id": "12bd0e65-bd56-4a2a-a414-3b7de5a01e33",
+      "name": "ThreadFailedCheck1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Advice",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1420,
+        -940
+      ],
+      "id": "e9a2d347-c2d9-4f7b-9c13-44610fae1150",
+      "name": "Advice",
+      "webhookId": "0b1f4cd9-1fc4-42b4-88a8-f458dfece55e"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Sales",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1420,
+        -160
+      ],
+      "id": "10df03b8-2336-4f68-af2c-32f016dda3cd",
+      "name": "Sales",
+      "webhookId": "c56ea2ee-9504-4340-bc3f-54794f03fdd9"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 220,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -100,
+        -820
+      ],
+      "typeVersion": 1,
+      "id": "f8c228eb-cf64-4ec2-baf6-a014527a31de",
+      "name": "Sticky Note40"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $json.thread_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"role\": \"user\",\n  \"content\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"{{ $('Advice').item.json.body.question }}\"\n    },\n    {\n      \"type\": \"image_url\",\n      \"image_url\": {\n        \"url\": \"{{ $('Advice').item.json.body.image }}\"\n      }\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -40,
+        -960
+      ],
+      "id": "eaed1071-3c05-4279-be4c-a3c9509cde4e",
+      "name": "Thread_Advice_Message_Image"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $('Correct_Advice_Thread').item.json.thread_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "OpenAI-Beta",
+              "value": "assistants=v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"role\": \"user\",\n  \"content\": \" {{ $('Advice').item.json.body.question || 'Default fallback message' }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -40,
+        -800
+      ],
+      "id": "6459f48b-0679-4989-9ca9-28c3f9fdb295",
+      "name": "Thread_Advice_Message"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        720,
+        -1100
+      ],
+      "typeVersion": 1,
+      "id": "34dff1e2-969c-48c0-b1f0-9587cdd561bf",
+      "name": "Sticky Note41"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        720,
+        -860
+      ],
+      "typeVersion": 1,
+      "id": "83ad6f92-33d2-4979-9b18-d53d3d113579",
+      "name": "Sticky Note42"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "threadsid",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "sessionid",
+              "condition": "eq",
+              "keyValue": "={{ $('Advice').item.json.body.sessionId }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        760,
+        -840
+      ],
+      "id": "30fab437-403b-43ff-b584-7fcfd2fade0c",
+      "name": "Delete_Advice_Thread_Supabase",
+      "credentials": {
+        "supabaseApi": {
+          "id": "REDACTED_ID",
+          "name": "REDACTED_CREDENTIAL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -300,
+        -980
+      ],
+      "typeVersion": 1,
+      "id": "e7b045bb-ac1c-4775-a5b7-feabe9671de0",
+      "name": "Sticky Note43"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 220,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -120,
+        -40
+      ],
+      "typeVersion": 1,
+      "id": "87fff597-c616-4e32-b3be-6847b430919b",
+      "name": "Sticky Note44"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -300,
+        -200
+      ],
+      "typeVersion": 1,
+      "id": "b2cb7122-542f-41ff-811d-68d6d003f71e",
+      "name": "Sticky Note45"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "width": 170,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        640,
+        -60
+      ],
+      "typeVersion": 1,
+      "id": "36040841-51f5-4556-9aec-0cd69ab6aa57",
+      "name": "Sticky Note46"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Data_Adjust": {
+      "main": [
+        [
+          {
+            "node": "YesOrNot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YesOrNot": {
+      "main": [
+        [
+          {
+            "node": "Approved_Satisfaction",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Negative_Satisfaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Satisfaction": {
+      "main": [
+        [
+          {
+            "node": "Data_Adjust",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_ID": {
+      "main": [
+        [
+          {
+            "node": "NewThread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Message": {
+      "main": [
+        [
+          {
+            "node": "Thread_Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Instructions": {
+      "main": [
+        [
+          {
+            "node": "Thread_IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Thread_IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_IA": {
+      "main": [
+        [
+          {
+            "node": "ThreadFailedCheck",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Answer": {
+      "main": [
+        [
+          {
+            "node": "Evaluate_Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Final_Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_Code": {
+      "main": [
+        [
+          {
+            "node": "Extract_Price",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract_Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract_Price": {
+      "main": [
+        [
+          {
+            "node": "Price",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Price": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Final_Answer": {
+      "main": [
+        [
+          {
+            "node": "Answer_Adjust",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate_Text": {
+      "main": [
+        [
+          {
+            "node": "Not_Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response": {
+      "main": [
+        [
+          {
+            "node": "Thread_Answer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean_Text": {
+      "main": [
+        [
+          {
+            "node": "Separate_Correct_Products",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get_Correct_URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Not_Response": {
+      "main": [
+        [
+          {
+            "node": "IA_Answer1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Clean_Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IA_Answer1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "NoStock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer_Adjust": {
+      "main": [
+        [
+          {
+            "node": "Data_Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data_Base": {
+      "main": [
+        [
+          {
+            "node": "Insert_Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separate_Correct_Products": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_Correct_URLs": {
+      "main": [
+        [
+          {
+            "node": "Get_Code",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Extract_Stock": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response1": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_Answer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advice_Answer": {
+      "main": [
+        [
+          {
+            "node": "Adjust_Advice_Answer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adjust_Advice_Answer": {
+      "main": [
+        [
+          {
+            "node": "Advice_Data_Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advice_Data_Base": {
+      "main": [
+        [
+          {
+            "node": "Advice_Data_Base1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_Answer": {
+      "main": [
+        [
+          {
+            "node": "Advice_Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_Instructions": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_ID": {
+      "main": [
+        [
+          {
+            "node": "New_Thread_Advice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_IA": {
+      "main": [
+        [
+          {
+            "node": "ThreadFailedCheck1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearchThread": {
+      "main": [
+        [
+          {
+            "node": "ThreadExist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ThreadExist": {
+      "main": [
+        [
+          {
+            "node": "CorrectThread",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Thread_ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NewThread": {
+      "main": [
+        [
+          {
+            "node": "CorrectThread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CorrectThread": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New_Thread_Advice": {
+      "main": [
+        [
+          {
+            "node": "Correct_Advice_Thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_Exist": {
+      "main": [
+        [
+          {
+            "node": "Correct_Advice_Thread",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Thread_Advice_ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Correct_Advice_Thread": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search_Advice_Thread": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_Message_Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Thread_Advice_Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Thread_Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Thread_Message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Message2": {
+      "main": [
+        [
+          {
+            "node": "Thread_Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ThreadFailedCheck": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "DeleteThreadSupabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeleteThreadSupabase": {
+      "main": [
+        [
+          {
+            "node": "Thread_ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ThreadFailedCheck1": {
+      "main": [
+        [
+          {
+            "node": "Response1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete_Advice_Thread_Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Advice": {
+      "main": [
+        [
+          {
+            "node": "Search_Advice_Thread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sales": {
+      "main": [
+        [
+          {
+            "node": "SearchThread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_Message_Image": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thread_Advice_Message": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete_Advice_Thread_Supabase": {
+      "main": [
+        [
+          {
+            "node": "Thread_Advice_ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "CfWyy3cABCWUaUvZ"
+  },
+  "versionId": "d656ae00-dd6c-4eab-934b-2f15bd16b29c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bafe1899d3f841cfab665d71c5df8a53bcffee365b2c664940449fcccd3f2813"
+  },
+  "id": "CfWyy3cABCWUaUvZ",
+  "tags": []
+}
