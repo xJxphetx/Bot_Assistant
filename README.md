@@ -60,5 +60,5 @@ Bot_Assistant/
 ---
 
 ## Créditos
-Desarrollado por @xJxphetx – Julio 2025
+### Desarrollado por @xJxphetx – Julio 2025
 ---
