@@ -36,6 +36,8 @@ Bot_Assistant/
 ├── image.png                           # Captura de la interfaz en acción
 └── README.md                           # Este archivo
 
+---
+
 ## ¿Cómo funciona?
 1. El usuario accede a la web:
 Selecciona “Asesoramiento” o “Compra”
@@ -51,6 +53,8 @@ Consulta OpenAI + bases de datos (stock, productos, sesiones)
 
 Registra logs y devuelve respuesta inteligente
 
+---
+
 ##  Documentación
 
 -  [Flujo n8n AI Assistant](./docs/flujo-n8n-ai-assistant.md)
@@ -61,3 +65,4 @@ Registra logs y devuelve respuesta inteligente
 
 ## Créditos
 Desarrollado por @xJxphetx – Julio 2025
+---
