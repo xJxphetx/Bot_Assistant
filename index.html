@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * { box-sizing: border-box; }
+    /* The above code is setting the styling for the HTML and body elements. It sets the margin and
+    padding to 0, makes the height of the body 100% of the viewport height, uses the 'Segoe UI' font
+    or a sans-serif fallback, and creates a linear gradient background from #e6f0ff to #ffffff. The
+    body element is set to display as a flex container with items centered horizontally and
+    stretched vertically. */
     html, body {
       margin: 0;
       padding: 0;
@@ -19,6 +24,14 @@
       align-items: stretch;
     }
 
+    /* The above code is defining a CSS class named `.container` with the following properties:
+    - Displaying the container as a flex container with a column direction
+    - Setting the width to 100% and a maximum width of 700px
+    - Setting the height to 100% of the viewport height
+    - Setting the background color to white
+    - Adding a border radius of 12px
+    - Applying a box shadow for a subtle shadow effect
+    - Setting overflow to hidden to prevent content from overflowing the container */
     .container {
       display: flex;
       flex-direction: column;
@@ -31,6 +44,11 @@
       overflow: hidden;
     }
     
+    /* The above code is defining styles for a header element in HTML. It sets the header to have a
+    flex display with centered alignment of items, a padding of 15px top and bottom and 20px left
+    and right, a background color of #0056b3 (a shade of blue), and text color of white (#fff).
+    Inside the header, there is an image element with a height of 36px and a margin to the right of
+    12px, and a heading 2 element with a font size of 20px and no margin. */
     .header {
       display: flex;
       align-items: center;
@@ -38,17 +56,20 @@
       background-color: #0056b3;
       color: #fff;
     }
-
     .header img {
       height: 36px;
       margin-right: 12px;
     }
-
     .header h2 {
       font-size: 20px;
       margin: 0;
     }
 
+    /* The above code is styling a chat container element with the id "chat". It is setting the
+    container to take up all available space with flex: 1, allowing for vertical scrolling with
+    overflow-y: auto, adding padding to the container, setting the background color to #f9f9f9,
+    arranging the child elements in a column layout with flex-direction: column, and enabling smooth
+    scrolling behavior with scroll-behavior: smooth. */
     #chat {
       flex: 1;
       overflow-y: auto;
@@ -59,32 +80,32 @@
       scroll-behavior: smooth;
     }
 
+    /* The above code is defining styles for a chat message wrapper element. It uses flexbox to align
+    items and control the layout of the chat messages. The `.msg-wrapper` class sets the display to
+    flex and aligns items to the start. The `.bot-wrapper` and `.user-wrapper` classes adjust the
+    flex direction and justify content for messages from the bot and user respectively. The
+    `.avatar` class adjusts the margin of the avatar within the message wrapper. */
     .msg-wrapper {
       display: flex;
       align-items: flex-start;
       margin-bottom: 12px;
       width: 100%;
     }
-
-    .msg-wrapper.bot-wrapper {
-      flex-direction: row;
-    }
-
+    .msg-wrapper.bot-wrapper { flex-direction: row; }
     .msg-wrapper.user-wrapper {
       flex-direction: row-reverse;
       justify-content: flex-end;
     }
+    .msg-wrapper.bot-wrapper .avatar { margin-right: 10px; }
+    .msg-wrapper.user-wrapper .avatar { margin-left: 10px; }
 
-    .msg-wrapper.bot-wrapper .avatar {
-      margin-right: 10px;
-      margin-left: 0;
-    }
-
-    .msg-wrapper.user-wrapper .avatar {
-      margin-left: 10px;
-      margin-right: 0;
-    }
-
+    /* The above code is defining a CSS class named `.avatar` with the following properties:
+    - `width: 32px;`: Sets the width of the element with this class to 32 pixels.
+    - `height: 32px;`: Sets the height of the element with this class to 32 pixels.
+    - `border-radius: 50%;`: Creates a circular border around the element by setting the border
+    radius to 50%, resulting in a rounded shape.
+    - `object-fit: cover;`: Specifies how the contents of the element should be resized to fit its
+    container, covering the container */
     .avatar {
       width: 32px;
       height: 32px;
@@ -92,6 +113,13 @@
       object-fit: cover;
     }
 
+    /* The above code is defining styles for chat message boxes. It includes styles for messages from a
+    bot and messages from a user. The messages have a padding, border radius, maximum width, word
+    wrap, font size, line height, and animation for fading in. The bot messages have a light gray
+    background with dark text color, while user messages have a light blue background with left
+    alignment, a box shadow, and a maximum width of 90%. Both types of messages have a triangular
+    shape on one side created using pseudo-elements (::before) with different colors for the bot and
+    user messages. */
     .msg {
       padding: 12px 16px;
       border-radius: 18px;
@@ -102,55 +130,39 @@
       animation: fadeIn 0.3s ease-in;
       position: relative;
     }
-
     .msg.bot {
       background: #eeeeee;
       color: #333;
       border-radius: 18px;
     }
-
     .msg.user {
       background: #cce5ff;
       text-align: left;
-      border-radius: 18px;
-      margin-right: 0;
+      border-radius: 18px;     
       margin-left: auto;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
       width: auto;
       max-width: 90%; 
     }
-
-    .msg.bot {
-      position: relative;
-    }
-
-    .msg.bot::before {
+    .msg.bot::before, .msg.user::before {
       content: "";
       position: absolute;
-      left: -8px;
       top: 12px;
       width: 0;
       height: 0;
       border-top: 8px solid transparent;
-      border-right: 8px solid #eeeeee;
       border-bottom: 8px solid transparent;
     }
-
-    .msg.user {
-      position: relative;
+    .msg.bot::before {
+      left: -8px;
+      border-right: 8px solid #eeeeee;
     }
     .msg.user::before {
-      content: "";
-      position: absolute;
       right: -8px;
-      top: 12px;
-      width: 0;
-      height: 0;
-      border-top: 8px solid transparent;
       border-left: 8px solid #cce5ff;
-      border-bottom: 8px solid transparent;
     }
 
+    /* The above code is defining CSS styles for two classes: `.user` and `.bot`. */
     .user {
       background: #cce5ff;
       align-self: flex-end;
@@ -163,15 +175,24 @@
       color: #333;
       border-top-left-radius: 0;
     }
-    #msg {
-      flex: 1;
-      padding: 10px 14px;
-      border-radius: 8px;
+
+    /* The above code is defining CSS styles for an element with the id "msg" and for input elements of
+    type text within an element with the class "input-row". The styles include setting the element
+    to grow within its container, adding padding, border, border radius, font size, and removing the
+    outline. */
+    #msg, .input-row input[type="text"] {
+      flex-grow: 1;
+      padding: 8px 12px;
       border: 1px solid #ccc;
+      border-radius: 6px;
       font-size: 16px;
       outline: none;
     }
-    button {
+
+    /* The above code is styling buttons in HTML. It sets the padding, background color, text color,
+    border, font weight, border radius, cursor style, and hover effect for buttons. When a button is
+    hovered over, its background color changes to a darker shade. */
+    button, #input-area button {
       padding: 10px 16px;
       background-color: #007bff;
       color: white;
@@ -181,9 +202,15 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    button:hover {
+    button:hover, #input-area button:hover {
       background-color: #0056b3;
     }
+
+    /* The above code is creating a simple animation of three blinking dots. The dots are styled with
+    CSS to have a circular shape and a specific color. The animation is defined using keyframes with
+    the name "blink" and a duration of 1.4 seconds, set to repeat infinitely. Each dot has a
+    different animation delay to create a sequential blinking effect. The dots are displayed in a
+    flex container with some spacing and alignment properties. */
     .typing {
       display: flex;
       gap: 6px;
@@ -200,81 +227,58 @@
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
 
+    /* The above code is defining two CSS animations using keyframes. */
     @keyframes blink {
       0% { opacity: 0.2; transform: scale(1); }
       20% { opacity: 1; transform: scale(1.3); }
       100% { opacity: 0.2; transform: scale(1); }
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* The above code is setting the color of the text to a shade of blue (#007bff) and adding an
+    underline decoration to any anchor (<a>) elements in the HTML document. */
     a { color: #007bff; text-decoration: underline; }
 
-    .opcion-btn {
+    /* The above code is defining styles for three different types of buttons: `.opcion-btn`,
+    `.opcion-btn-asesor`, and `.btn-volver`. These buttons have similar styles such as border,
+    border-radius, background color, text color, cursor, font weight, and transitions. */
+    .opcion-btn, .opcion-btn-asesor, .btn-volver {
       display: inline-block;
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 12px 16px;
       border: none;
       border-radius: 8px;
       background-color: #5296df;
       color: white;
       cursor: pointer;
-      font-size: 14px;
       font-weight: bold;
-      text-align: left;
       transition: background-color 0.3s, transform 0.2s;
       margin-top: 10px;
     }
-
-    .opcion-btn:hover {
-      background-color: #0056b3;
-      transform: scale(1.02);
+    .opcion-btn {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      text-align: left;
     }
-
-    .opcion-btn-asesor {
-      display: inline-block;
+    .opcion-btn-asesor, .btn-volver {
       width: auto;
       padding: 8px 14px;
       font-size: 13px;
-      background-color: #5296df;
-      color: white;
-      font-weight: bold;
-      border: none;
       border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-top: 10px;
     }
-
-    .opcion-btn-asesor:hover {
+    .opcion-btn:hover, .opcion-btn-asesor:hover, .btn-volver:hover {
       background-color: #0056b3;
       transform: scale(1.02);
     }
-
-    .btn-volver {
-      display: inline-block;
-      width: auto;
-      padding: 8px 14px;
-      font-size: 13px;
-      background-color: #5296df;
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      margin-top: 10px;
-    }
-
     .btn-volver:hover {
       background-color: #003f8a;
-      transform: scale(1.02);
     }
 
+    /* The above code is a CSS media query targeting screens with a maximum width of 600px. It adjusts
+    the styling of various elements when the screen size is smaller. */
     @media (max-width: 600px) {
       .container {
         border-radius: 0;
@@ -282,21 +286,32 @@
       }
       .header h2 { font-size: 16px; }
       .header img { height: 30px; }
-      button { font-size: 14px; }
-      #msg { font-size: 14px; }
+      button, #msg { font-size: 14px; }
+      #chat { padding-bottom: 160px; }
+      html, body { overflow: hidden; }
+      .container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+      }
     }
 
+    /* The above code is defining styles for a file upload component. It sets the display property of
+    the `.file-upload` class to flex, aligns items in the center, and sets a gap of 8px between the
+    items. The `.file-input` class is set to `display: none`, which likely means it is used to hide
+    the file input element visually. */
     .file-upload {
       display: flex;
       align-items: center;
       gap: 8px;
     }
+    .file-input { display: none; }
 
-    .file-input {
-      display: none;
-    }
-
-    .icon-container {
+    /* The above code is defining CSS styles for an icon container and clip container. */
+    .icon-container, .clip-container {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -306,12 +321,10 @@
       border-radius: 6px;
       transition: transform 0.2s ease, filter 0.2s ease;
     }
-
     .clip-container:hover .clip-image {
       transform: scale(1.15);
       filter: brightness(1.2);
     }
-
     .clip-image {
       width: 28px;
       height: 28px;
@@ -319,42 +332,12 @@
       transition: transform 0.2s ease, filter 0.2s ease;
     }
 
+    /* The above code is styling an input area using CSS. It sets the position to relative and aligns
+    the input area using flexbox properties. It adds padding, border, background color, z-index, and
+    box-shadow to give the input area a specific look and feel. */
     #input-area {
       position: relative;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-top: 1px solid #ddd;
-      background-color: #fff;
-      z-index: 1000;
-      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.06);
-    }
-
-    #input-area button {
-      padding: 8px 16px;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    #input-area button:hover {
-      background: #0056b3;
-    }
-
-    #msg {
-      flex-grow: 1;
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    #input-area {
+      bottom: 0; left: 0; right: 0;
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -362,31 +345,40 @@
       padding: 10px 12px;
       border-top: 1px solid #ddd;
       background-color: #fff;
+      z-index: 1000;
       box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.06);
     }
 
+    /* The above code is defining a CSS class called `.input-row` with the following properties:
+    - `display: flex;` - This property makes the elements inside the `.input-row` class behave like
+    a flex container, allowing you to use flexbox properties to control the layout of its children.
+    - `align-items: center;` - This property aligns the items along the cross-axis (vertically in
+    this case) to the center within the flex container.
+    - `gap: 10px;` - This property sets the gap between the child elements within the flex container
+    to 10 pixels */
     .input-row {
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .input-row input[type="text"] {
-      flex-grow: 1;
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-
-    .preview-container {
+    /* The above code is defining styles for a preview container and a preview stack. Both elements are
+    displayed as flex containers with items aligned in the center and a gap of 8px between them. The
+    images inside these containers have a fixed width and height of 80px, with a cover object-fit,
+    border radius, border, and box shadow for styling. Additionally, there is a remove button
+    positioned absolutely in the top right corner of the container, styled with a background color,
+    text color, border radius, size, and cursor pointer. When hovered over, the remove button
+    changes its background color. */
+    .preview-container, .preview-stack {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       position: relative;
       width: fit-content;
       max-width: 100%;
       margin-bottom: 4px;
     }
-
-    .preview-container img {
+    .preview-container img, .preview-stack img {
       width: 80px;
       height: 80px;
       object-fit: cover;
@@ -395,8 +387,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       display: block;
     }
-
-    .preview-container .remove-btn {
+    .preview-container .remove-btn, .preview-stack .remove-btn {
       position: absolute;
       top: -8px;
       right: -8px;
@@ -413,11 +404,15 @@
       justify-content: center;
       box-shadow: 0 1px 5px rgba(0,0,0,0.3);
     }
-
-    .preview-container .remove-btn:hover {
+    .preview-container .remove-btn:hover, .preview-stack .remove-btn:hover {
       background: #616161;
     }
 
+    /* The above code is styling an image preview element and a remove button. The image preview
+    element has a width and height of 60px, a border radius of 6px, object-fit set to cover, a
+    border of 1px solid #ccc, a box shadow, and is positioned relative. The remove button has a
+    background color of #616161, no border, white text color, a font size of 12px, a border radius
+    of 50%, a width and height of 20px, a cursor set to pointer, and a margin-left of 6px. */
     #imagen-preview img {
       width: 60px;
       height: 60px;
@@ -427,7 +422,6 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       position: relative;
     }
-
     #imagen-preview .remove-btn {
       background: #616161;
       border: none;
@@ -440,6 +434,10 @@
       margin-left: 6px;
     }
 
+    /* The above code is defining a CSS class named `.img-msg`. This class sets the maximum width of
+    the element to 160px, adds a border radius of 10px to give rounded corners, sets a margin-bottom
+    of 6px to create space below the element, makes the element a block-level element, and applies a
+    box shadow effect with a slight blur and transparency to create a shadow effect. */
     .img-msg {
       max-width: 160px;
       border-radius: 10px;
@@ -448,51 +446,27 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
+    /* The above code is using a CSS feature query `@supports` to check if the browser supports the
+    property `-webkit-touch-callout: none`. If supported, it applies certain styles to the HTML and
+    body elements, setting their height to 100%, enabling touch scrolling with
+    `-webkit-overflow-scrolling: touch`, hiding horizontal overflow, setting the height of the
+    container to 100 viewport height units (`100dvh`), and adding padding to the `#input-area`
+    element based on the safe area inset at the bottom of the viewport. */
     @supports (-webkit-touch-callout: none) {
       html, body {
         height: 100%;
         -webkit-overflow-scrolling: touch;
         overflow-x: hidden;
       }
-
-      .container {
-        height: 100dvh;
-      }
-
-      #input-area {
-        padding-bottom: env(safe-area-inset-bottom, 10px);
-      }
+      .container { height: 100dvh; }
+      #input-area { padding-bottom: env(safe-area-inset-bottom, 10px); }
     }
 
-    @media (max-width: 600px) {
-      html, body {
-        height: 100%;
-        overflow: hidden;
-      }
-
-      .container {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
-
-      #chat {
-        padding-bottom: 160px; 
-      }
-    }
-
-    .input-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
+    /* The above code is styling a custom input element. It creates a container with the id
+    "custom-input" that has a flex display with a column direction. It sets a border, border radius,
+    background color, padding, and gap for the container. The input element inside this container
+    with type "text" is styled to have no border, no outline, a font size of 15px, and a transparent
+    background. */
     #custom-input {
       display: flex;
       flex-direction: column;
@@ -503,7 +477,6 @@
       gap: 6px;
       flex-grow: 1;
     }
-
     #custom-input input[type="text"] {
       border: none;
       outline: none;
@@ -511,26 +484,16 @@
       background: transparent;
     }
 
-    .preview-stack {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .preview-stack img {
-      width: 36px;
-      height: 36px;
-      border-radius: 6px;
-      object-fit: cover;
-      border: 1px solid #ccc;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
-
+    /* The above code defines styles for an image wrapper element with a remove button. The image
+    wrapper has a border, border radius, box shadow, and a fixed size of 40px by 40px. The remove
+    button is positioned absolutely in the top right corner of the image wrapper, styled with a
+    background color, border radius, and text styling. The code also includes a fade-out effect for
+    the image wrapper when a certain class "fade-out" is applied, causing it to decrease in opacity
+    and scale. */
     .image-wrapper {
       position: relative;
       display: inline-block;
     }
-
     .image-wrapper img {
       display: block;
       width: 40px;
@@ -540,7 +503,6 @@
       border: 1px solid #ccc;
       box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
-
     .image-wrapper .remove-btn {
       position: absolute;
       top: -6px;
@@ -561,17 +523,20 @@
       transition: background 0.2s ease;
       z-index: 1;
     }
-
     .image-wrapper.fade-out {
       opacity: 0;
       transform: scale(0.8);
       transition: all 0.2s ease;
     }
-
   </style>
 
 </head>
 <body>
+  <!-- The above code is creating a basic HTML structure for a webpage. It includes a header section with
+  a logo and company name, a chat area, an input area for users to type messages and attach images,
+  and a button to send messages. The input area also includes a file input for attaching images and
+  a text input for typing messages. The "Enviar" button is disabled by default and there is a
+  function "enviar()" that is called when the button is clicked. -->
   <div class="container">
     <div class="header">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9pJ85Zy6nLEQ8Xqs4KlR_vcKYNHUmEY1JUw&s" alt="Logo AG Electrónica" />
@@ -600,16 +565,28 @@
   </div>
 
   <script>
+    /* The above code is an HTML comment. It is not executable code but a way to add comments in HTML
+    files to provide information or notes for developers. It appears to be a comment block that
+    includes some JavaScript code related to a chat application. The JavaScript code defines
+    variables `chat`, `typingEl`, and `webhook`, but it is incomplete and does not have any
+    functionality specified. */
     const chat = document.getElementById('chat');
     let typingEl = null;
     let webhook = '';
 
+    /* The above code is checking if there is a 'chat_session_id' stored in the localStorage. If it
+    exists, it retrieves the value. If it doesn't exist, it generates a new session id in the format
+    'cliente_' followed by a random number between 0 and 999999, stores it in the localStorage with
+    the key 'chat_session_id', and returns the generated id. */
     const sessionId = localStorage.getItem('chat_session_id') || (() => {
       const id = 'cliente_' + Math.floor(Math.random() * 1000000);
       localStorage.setItem('chat_session_id', id);
       return id;
     })();
 
+    /* The above code defines a function called `agregarMensaje` that is used to add a message to a
+    chat interface. The function takes two parameters: `texto` (the text of the message) and `clase`
+    (the class of the message, defaulting to 'bot'). */
     function agregarMensaje(texto, clase = 'bot') {
       const wrapper = document.createElement('div');
       wrapper.className = `msg-wrapper ${clase}-wrapper`;
@@ -619,7 +596,6 @@
       avatar.src = clase === 'bot'
         ? 'https://cdn-icons-png.flaticon.com/512/4712/4712109.png'  // avatar asistente
         : 'https://cdn-icons-png.flaticon.com/512/1077/1077012.png'; // avatar usuario
-
       const msg = document.createElement('div');
       msg.className = `msg ${clase}`;
       msg.innerHTML = texto;
@@ -630,11 +606,12 @@
       chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth'});
     }
 
+    /* The above code is a JavaScript function that creates a new div element with a class name 'msg
+    bot typing' and inner HTML containing three span elements with class 'dot'. This function is
+    used to simulate a typing indicator in a chat interface by adding the typing element to the chat
+    container and scrolling to the bottom of the chat. */
     function agregarEscribiendo() {
-      if (typingEl) {
-        quitarEscribiendo();
-      }
-
+      quitarEscribiendo();
       typingEl = document.createElement('div');
       typingEl.className = 'msg bot typing';
       typingEl.innerHTML = `<span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
@@ -642,6 +619,9 @@
       chat.scrollTop = chat.scrollHeight;
     }
 
+    /* The above code is a JavaScript function called `quitarEscribiendo` that checks if a variable
+    `typingEl` exists. If `typingEl` exists, it removes the element represented by `typingEl` from
+    the DOM and sets `typingEl` to `null`. */
     function quitarEscribiendo() {
       if (typingEl) {
         typingEl.remove();
@@ -649,80 +629,84 @@
       }
     }
 
+    /* The above code is a JavaScript function called `escapeHTML` that takes a text input and escapes
+    special characters commonly used in HTML. It uses a regular expression to find characters like
+    `&`, `<`, `>`, `"`, and `'` and replaces them with their corresponding HTML entities to prevent
+    HTML injection attacks and ensure the text is displayed correctly in an HTML context. */
     function escapeHTML(text) {
       return text.replace(/[&<>"']/g, match => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
       })[match]);
     }
 
+    /* The above code is initializing two variables: `mensajeAcumulado` as an empty string and
+    `temporizadorEnvio` as `null`. */
     let mensajeAcumulado = '';
     let temporizadorEnvio = null;
-    let escribiendoMostrado = false;
 
+    /* The above code defines a JavaScript function called `limpiarInputs` that clears the value of two
+    input fields and the content of an element with the id 'imagen-preview' on a web page.
+    Specifically, it sets the value of the input field with the id 'msg' and 'imagen' to an empty
+    string, and clears the inner HTML content of the element with the id 'imagen-preview'. */
+    function limpiarInputs() {
+      document.getElementById('msg').value = '';
+      document.getElementById('imagen').value = '';
+      document.getElementById('imagen-preview').innerHTML = '';
+    }
+
+    /* The above code is an asynchronous function called `enviar()` that handles sending messages in a
+    chat application. Here is a breakdown of what the code does: */
     async function enviar() {
       const input = document.getElementById('msg');
       const texto = input.value.trim();
       const imagenInput = document.getElementById('imagen');
       const file = imagenInput.files[0];
-
       if (!texto && !file) return;
-
       if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
           const imageHtml = `<img src="${e.target.result}" class="img-msg" alt="imagen enviada">`;
           const combined = texto ? `${imageHtml}<div>${escapeHTML(texto)}</div>` : imageHtml;
           agregarMensaje(combined, 'user');
+          agregarEscribiendo();
         };
         reader.readAsDataURL(file);
       } else {
         agregarMensaje(escapeHTML(texto), 'user');
+        agregarEscribiendo();
       }
-
-      if (texto) {
-        mensajeAcumulado += (mensajeAcumulado ? ' ' : '') + texto;
-      }
-
-      input.value = '';
-      imagenInput.value = '';
-      document.getElementById('imagen-preview').innerHTML = '';
-
-      if (temporizadorEnvio) {
-        clearTimeout(temporizadorEnvio);
-      }
-
-      agregarEscribiendo();
-
-      temporizadorEnvio = setTimeout(() => {
-        enviarAcumulado(file);
-      }, 5000);
-
+      if (texto) mensajeAcumulado += (mensajeAcumulado ? ' ' : '') + texto;
+      limpiarInputs();
+      clearTimeout(temporizadorEnvio);
+      temporizadorEnvio = setTimeout(() => enviarAcumulado(file), 5000);
     }
 
+    /* The above code is an asynchronous function called `enviarAcumulado` that handles sending
+    accumulated messages. It first checks if there is an accumulated message (`mensajeAcumulado`)
+    and a webhook available. If a file is provided, it reads the file using `FileReader`, converts
+    it to base64 format, uploads it to the ImgBB API using a POST request, and then sends the
+    accumulated message along with the image URL to a specified endpoint using `enviarRequest`
+    function. If there is no file provided, it directly sends the accumulated message without an
+    image. Finally, it clears the */
     async function enviarAcumulado(file = null) {
       if (!mensajeAcumulado || !webhook) return;
-
       if (file) {
         const reader = new FileReader();
         reader.onloadend = async function () {
           const base64 = reader.result.split(',')[1];
-
           try {
             const imgbbRes = await fetch('https://api.imgbb.com/1/upload?key=11aa809dcd9947691a6ef1c104e8b555', {
               method: 'POST',
               headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
               body: new URLSearchParams({ image: base64 })
             });
-
             const json = await imgbbRes.json();
             const imageUrl = json?.data?.url;
-
             if (!imageUrl) {
               agregarMensaje('❌ Error al subir imagen.');
               quitarEscribiendo();
               return;
             }
-
             await enviarRequest(mensajeAcumulado, imageUrl);
             mensajeAcumulado = '';
           } catch (err) {
@@ -738,26 +722,24 @@
       }
     }
 
+    /* The above code is an asynchronous function called `enviarRequest` that sends a POST request to a
+    webhook with a payload containing a question and an optional image URL. It then processes the
+    response, parsing it as JSON if possible, and formats the response to display in HTML. The
+    response is then added to the page with an option for the user to indicate if the answer was
+    helpful. If there are any errors during the process, appropriate error messages are displayed. */
     async function enviarRequest(pregunta, imageUrl = null) {
       try {
-        const payload = {
-          question: pregunta,
-          sessionId
-        };
-
+        const payload = { question: pregunta, sessionId };
         if (imageUrl && imageUrl.startsWith('http') && !imageUrl.includes('undefined') && !imageUrl.includes('null')) {
           payload.image = imageUrl;
         }
-
         const res = await fetch(webhook, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
         const raw = await res.text();
         let respuesta = raw?.trim() || "❌ No se recibió respuesta del servidor.";
-
         try {
           const parsed = JSON.parse(raw);
           if (parsed?.RespuestaFinal?.trim()) {
@@ -766,7 +748,6 @@
         } catch (e) {
           console.warn("❗ Error al parsear JSON:", e);
         }
-
         let html = respuesta.replace(/\n/g, "<br>").replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
         html += `
           <div style="margin-top: 16px;">
@@ -777,7 +758,6 @@
         `;
         agregarMensaje(html);
         quitarEscribiendo();
-
       } catch (error) {
         quitarEscribiendo();
         console.error("❌ Error al conectar con el servidor:", error);
@@ -785,6 +765,11 @@
       }
     }
 
+    /* The above code is a JavaScript function called `mostrarMensajeInicial` that displays an initial
+    message using the `agregarMensaje` function. The message includes a greeting from the virtual
+    assistant, AG-ente Electrónica, and provides options for assistance such as "Asesoramiento",
+    "Comprar", and "Soporte Técnico". The function also disables the input field and button after
+    displaying the initial message. */
     function mostrarMensajeInicial() {
       agregarMensaje(`
         <strong>Hola 👋, soy <span style="color:#0056b3">AG-ente Electrónica</span>, tu asistente virtual.</strong><br>
@@ -798,6 +783,11 @@
       document.querySelector('#input-area button').disabled = true;
     }
 
+    /* The above code is a JavaScript function called `seleccionarFlujo` that takes a URL as a
+    parameter. Inside the function, it sets a global variable `webhook` to the provided URL, then it
+    checks if the URL includes the string "Advice" and sets the value of `chat_origin` in the
+    localStorage to either "Advice" or "Sales" based on the condition. Finally, it enables the input
+    field with the id 'msg' and the button inside the element with the id 'input-area'. */
     function seleccionarFlujo(url) {
       webhook = url;
       localStorage.setItem("chat_origin", url.includes("Advice") ? "Advice" : "Sales");
@@ -805,12 +795,12 @@
       document.querySelector('#input-area button').disabled = false;
     }
 
+    /* The above code defines a JavaScript function called `opcionSeleccionada(texto)` that is
+    triggered when a user selects an option in a chat interface. */
     function opcionSeleccionada(texto) {
       agregarMensaje(texto, 'user');
-
       if (texto === '🛒 Quiero comprar') {
         seleccionarFlujo('https://iaagelectronica1.app.n8n.cloud/webhook/Sales');
-
         agregarEscribiendo();
         setTimeout(() => {
           quitarEscribiendo();
@@ -828,10 +818,8 @@
           `);
         }, 3000);
       }
-
       else if (texto === '🔍 Quiero asesoramiento') {
         seleccionarFlujo('https://iaagelectronica1.app.n8n.cloud/webhook/Advice');
-
         agregarEscribiendo();
         setTimeout(() => {
           quitarEscribiendo();
@@ -843,12 +831,16 @@
       }
     }
 
+    /* The above code defines a function called `opcionFinal` that takes a `texto` parameter. Inside
+    the function, it adds a message to the chat interface with the text provided in the `texto`
+    parameter, disables all buttons with the class `opcion-btn`, adds a typing indicator, and then
+    after a delay of 3 seconds, removes the typing indicator, provides a response based on the
+    `texto` input using a predefined set of responses in the `respuestas` object, enables the
+    message input field, and enables the send button. */
     function opcionFinal(texto) {
       agregarMensaje(texto, 'user');
-      const botones = document.querySelectorAll('.opcion-btn');
-      botones.forEach(btn => btn.disabled = true);
+      document.querySelectorAll('.opcion-btn').forEach(btn => btn.disabled = true);
       agregarEscribiendo();
-
       setTimeout(() => {
         quitarEscribiendo();
         const respuestas = {
@@ -860,13 +852,16 @@
           'Instrumentación': '📟 ¿Qué instrumento necesitas? Multímetros, osciloscopios... dime cuál.',
           'Drones y Refaccionamiento': '🚁 ¿Buscas un dron completo o piezas de refacción? Estoy aquí para ayudarte.'
         };
-        const respuesta = respuestas[texto] || '✅ Selección registrada. ¿En qué más puedo ayudarte?';
-        agregarMensaje(`${respuesta}`);
+        agregarMensaje(respuestas[texto] || '✅ Selección registrada. ¿En qué más puedo ayudarte?');
         document.getElementById('msg').disabled = false;
         document.querySelector('#input-area button').disabled = false;
       }, 3000);
     }
 
+    /* The above code is a JavaScript function named `retroalimentacion` that handles feedback from the
+    user. It first adds a typing indicator to indicate that the bot is processing, then after a
+    delay of 3 seconds, it removes the typing indicator and displays a message based on the value
+    passed to the function. */
     function retroalimentacion(valor){
       agregarEscribiendo();
       setTimeout(() => {
@@ -892,10 +887,14 @@
       },3000);
     }
 
+    /* The above code defines a function `simularRespuestaUsuario` that takes two parameters `texto`
+    and `valor`. Inside the function, it adds a message to the chat interface with the user's input,
+    then provides feedback based on the value provided. If the value is 'si' or 'no', it makes a
+    POST request to a webhook URL with some data including the session ID, value, origin, and date.
+    Finally, it logs a message indicating that the satisfaction value has been sent. */
     function simularRespuestaUsuario(texto, valor) {
       agregarMensaje(texto, 'user');
       retroalimentacion(valor);
-    
       if (valor === 'si' || valor === 'no') {
         fetch("https://iaagelectronica1.app.n8n.cloud/webhook/satisfaction", {
           method: "POST",
@@ -910,6 +909,11 @@
       }
     }
 
+    /* The above code is a JavaScript function named `reiniciarConversacion` that resets a conversation
+    interface. It clears the `webhook` variable, empties the content of an element with the id
+    `chat`, disables the input field with the id `msg`, disables the button inside the element with
+    the id `input-area`, and then calls a function `mostrarMensajeInicial()` to display an initial
+    message. */
     function reiniciarConversacion() {
       webhook = '';
       chat.innerHTML = '';
@@ -919,14 +923,25 @@
       mostrarMensajeInicial();
     }
 
+    /* The above code is a JavaScript function called `cerrarConversacion` that performs the following
+    actions:
+    1. It adds a farewell message ('👋 ¡Hasta luego! Estoy aquí cuando me necesites.') using the
+    `agregarMensaje` function.
+    2. It disables the input field with the id 'msg'.
+    3. It disables the button inside the element with the id 'input-area'.
+    4. It disables all elements with classes 'opcion-btn-asesor', 'btn-volver', and 'opcion-btn'
+    using a forEach loop. */
     function cerrarConversacion() {
       agregarMensaje('👋 ¡Hasta luego! Estoy aquí cuando me necesites.');
       document.getElementById('msg').disabled = true;
       document.querySelector('#input-area button').disabled = true;
-      const botones = document.querySelectorAll('.opcion-btn-asesor, .btn-volver, .opcion-btn');
-      botones.forEach(btn => btn.disabled = true);
+      document.querySelectorAll('.opcion-btn-asesor, .btn-volver, .opcion-btn').forEach(btn => btn.disabled = true);
     }
 
+    /* The above code is setting up an event listener on an element with the id 'msg'. When a keydown
+    event occurs on that element, it checks if the key pressed is 'Enter'. If the 'Enter' key is
+    pressed, it prevents the default behavior (form submission) and calls the function 'enviar()'.
+    The function 'mostrarMensajeInicial' is also called when the window loads. */
     window.onload = mostrarMensajeInicial;
     document.getElementById('msg').addEventListener('keydown', e => {
       if (e.key === 'Enter') {
@@ -935,41 +950,43 @@
       }
     });
 
+    /* The above code is a JavaScript event listener that listens for changes in an input element with
+    the id 'imagen'. When a file is selected in the input element, the code checks if the selected
+    file is an image. If it is an image, it creates a preview of the image by reading the file as a
+    data URL using FileReader. The preview is displayed in a div with the class 'preview-stack'
+    along with a remove button that allows the user to remove the selected image preview. If the
+    remove button is clicked, the selected file input is cleared, the image preview fades out, and
+    the preview */
     document.getElementById('imagen').addEventListener('change', function () {
-      const archivo = this.files[0];
-      const previewDiv = document.querySelector('.preview-stack');
-      previewDiv.innerHTML = '';
-
-      if (archivo && archivo.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const wrapper = document.createElement('div');
-          wrapper.className = 'image-wrapper';
-
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          img.alt = 'Vista previa';
-
-          const removeBtn = document.createElement('button');
-          removeBtn.className = 'remove-btn';
-          removeBtn.innerHTML = '×';
-          removeBtn.onclick = function () {
-            document.getElementById('imagen').value = '';
-            wrapper.classList.add('fade-out');
-            setTimeout(() => {
-              previewDiv.innerHTML = '';
-              document.getElementById('msg').focus();
-            }, 200);
-          };
-
-          wrapper.appendChild(img);
-          wrapper.appendChild(removeBtn);
-          previewDiv.appendChild(wrapper);
+    const archivo = this.files[0];
+    const previewDiv = document.querySelector('.preview-stack');
+    previewDiv.innerHTML = '';
+    if (archivo && archivo.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'image-wrapper';
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = 'Vista previa';
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.innerHTML = '×';
+        removeBtn.onclick = () => {
+          document.getElementById('imagen').value = '';
+          wrapper.classList.add('fade-out');
+          setTimeout(() => {
+            previewDiv.innerHTML = '';
+            document.getElementById('msg').focus();
+          }, 200);
         };
-        reader.readAsDataURL(archivo);
-      }
-    });
-
+        wrapper.appendChild(img);
+        wrapper.appendChild(removeBtn);
+        previewDiv.appendChild(wrapper);
+      };
+      reader.readAsDataURL(archivo);
+    }
+  });
   </script>
 </body>
 </html>
