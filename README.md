@@ -39,19 +39,15 @@ Bot_Assistant/
 ---
 
 ## ¿Cómo funciona?
-1. El usuario accede a la web:
-Selecciona “Asesoramiento” o “Compra”
+### 1. El usuario accede a la web:
+    - Selecciona “Asesoramiento” o “Compra”
+    - Puede subir una imagen (opcional) y enviar su mensaje
 
-Puede subir una imagen (opcional) y enviar su mensaje
-
-2. El backend con n8n:
-Redirige al flujo correcto vía webhook
-
-Procesa la imagen (si aplica)
-
-Consulta OpenAI + bases de datos (stock, productos, sesiones)
-
-Registra logs y devuelve respuesta inteligente
+### 2. El backend con n8n:
+    - Redirige al flujo correcto vía webhook
+    - Procesa la imagen (si aplica)
+    - Consulta OpenAI + bases de datos (stock, productos, sesiones)
+    - Registra logs y devuelve respuesta inteligente
 
 ---
 
