@@ -59,6 +59,24 @@ Bot_Assistant/
 
 ---
 
+## Bases de datos utilizadas
+
+Este asistente utiliza las siguientes tablas en **Supabase** para registrar interacciones, evaluar satisfacción y gestionar procesos automatizados:
+
+| Tabla                  | Descripción                                                                 |
+|------------------------|------------------------------------------------------------------------------|
+| `Asesoramiento`         | Guarda preguntas, respuestas y tipo de asesoría técnica de cada sesión.     |
+| `Compra`                | Registra consultas relacionadas con compras, incluyendo tipo, origen y respuesta. |
+| `stock`                 | Consulta disponibilidad de productos con base en la sesión y pregunta.       |
+| `satisfaction_approved` | Almacena evaluaciones positivas de satisfacción del usuario.                |
+| `satisfaction_negative` | Almacena evaluaciones negativas de satisfacción del usuario.                |
+| `pendingmessages`       | Guarda mensajes en espera o no respondidos con su respectivo timestamp.     |
+| `threadsId`             | Relaciona las sesiones con hilos (threads) para seguimiento.                |
+
+Cada tabla se conecta al flujo de **n8n** para enriquecer la experiencia conversacional, registrar el historial y automatizar tareas de soporte y ventas.
+
+---
+
 ## Créditos
 ### Desarrollado por @xJxphetx – Julio 2025
 ---
